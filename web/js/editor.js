@@ -3,6 +3,7 @@
 
 import { TrifleDB } from './db.js';
 import { showError, showInfo } from './notifications.js';
+import { setupTurtleGraphics } from './turtle.js';
 
 // Constants
 const SYNC_CHECK_INTERVAL_MS = 10000;  // Check for offline sync every 10 seconds
@@ -25,9 +26,11 @@ const state = {
     isRunning: false,
     canvas: null,
     canvasCtx: null,
-    popoutCanvas: null,
     popoutWindow: null,
+    turtleAPI: null,
+    turtles: {},               // Map of turtle ID -> Turtle instance for multiple turtles
     popoutWindowChecker: null, // Interval for checking if popout is closed
+    resizeObserver: null,      // Observer for canvas pane resizing
     canvasUsed: false,         // Track if canvas has been used for output
     consoleUsed: false,        // Track if console has been used for output
 };
@@ -93,11 +96,11 @@ function clearOutput() {
 }
 
 function popoutCanvas() {
-    const canvas = document.getElementById('outputCanvas');
+    const canvasPane = document.getElementById('canvasPane');
 
-    // Size window to match canvas dimensions (plus padding for chrome/borders)
-    const windowWidth = canvas.width + 60;
-    const windowHeight = canvas.height + 100;
+    // Size window to reasonable default (user can resize)
+    const windowWidth = 800;
+    const windowHeight = 600;
     const popoutWindow = window.open('', 'Canvas', `width=${windowWidth},height=${windowHeight}`);
 
     if (!popoutWindow) {
@@ -123,97 +126,129 @@ function popoutCanvas() {
                     justify-content: center;
                     width: 100vw;
                     height: 100vh;
-                    padding: 20px;
+                    overflow: hidden;
                 }
-                #canvasContainer {
+                #canvasPaneContainer {
+                    width: 100%;
+                    height: 100vh;
+                    display: flex;
+                }
+                /* Match main window canvas pane styles */
+                .canvas-pane {
+                    flex: 1;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    background: #1e1e1e;
+                    padding: 12px;
+                    position: relative;
                     width: 100%;
                     height: 100%;
                 }
-                canvas {
+                /* Turtle container - all layers stacked */
+                #turtleContainer {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform-origin: center center;
+                }
+                /* Old canvas API canvas */
+                #outputCanvas {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform-origin: center center;
                     background: white;
-                    border: 2px solid #34495e;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                    /* Scale canvas to fit container while maintaining aspect ratio */
-                    max-width: 100%;
-                    max-height: 100%;
-                    object-fit: contain;
-                    image-rendering: auto;
+                    border: 1px solid #444;
                 }
             </style>
+            <script>
+                // Scale canvas containers to fit window
+                function scaleCanvases() {
+                    const pane = document.querySelector('.canvas-pane');
+                    if (!pane) return;
+
+                    const paneWidth = pane.clientWidth - 24; // Account for padding
+                    const paneHeight = pane.clientHeight - 24;
+
+                    // Scale turtle container
+                    const turtleContainer = document.getElementById('turtleContainer');
+                    if (turtleContainer) {
+                        const firstCanvas = turtleContainer.querySelector('canvas');
+                        if (firstCanvas) {
+                            const aspect = firstCanvas.width / firstCanvas.height;
+                            const paneAspect = paneWidth / paneHeight;
+                            let scale = paneAspect > aspect ? paneHeight / firstCanvas.height : paneWidth / firstCanvas.width;
+                            turtleContainer.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+                        }
+                    }
+
+                    // Scale old canvas API
+                    const outputCanvas = document.getElementById('outputCanvas');
+                    if (outputCanvas) {
+                        const aspect = outputCanvas.width / outputCanvas.height;
+                        const paneAspect = paneWidth / paneHeight;
+                        let scale = paneAspect > aspect ? paneHeight / outputCanvas.height : paneWidth / outputCanvas.width;
+                        outputCanvas.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+                    }
+                }
+
+                window.addEventListener('resize', scaleCanvases);
+                window.addEventListener('load', scaleCanvases);
+                setTimeout(scaleCanvases, 100);
+            <\/script>
         </head>
         <body>
-            <div id="canvasContainer">
-                <canvas id="popoutCanvas" width="${canvas.width}" height="${canvas.height}"></canvas>
-            </div>
-            <script>
-                // Update canvas display size when window resizes (global for parent access)
-                window.updateCanvasSize = function() {
-                    const canvas = document.getElementById('popoutCanvas');
-                    const container = document.getElementById('canvasContainer');
-
-                    // Get container dimensions
-                    const containerWidth = container.clientWidth;
-                    const containerHeight = container.clientHeight;
-
-                    // Prevent division by zero
-                    if (canvas.height === 0 || containerHeight === 0 || containerWidth === 0) {
-                        return; // Skip update if dimensions are invalid
-                    }
-
-                    // Get canvas aspect ratio
-                    const canvasAspect = canvas.width / canvas.height;
-                    const containerAspect = containerWidth / containerHeight;
-
-                    // Calculate display size maintaining aspect ratio
-                    let displayWidth, displayHeight;
-                    if (containerAspect > canvasAspect) {
-                        // Container is wider - fit to height
-                        displayHeight = containerHeight;
-                        displayWidth = displayHeight * canvasAspect;
-                    } else {
-                        // Container is taller - fit to width
-                        displayWidth = containerWidth;
-                        displayHeight = displayWidth / canvasAspect;
-                    }
-
-                    // Set CSS size for scaling
-                    canvas.style.width = displayWidth + 'px';
-                    canvas.style.height = displayHeight + 'px';
-                };
-
-                // Update on resize
-                window.addEventListener('resize', updateCanvasSize);
-
-                // Initial size
-                setTimeout(updateCanvasSize, 100);
-            </script>
+            <div id="canvasPaneContainer"></div>
         </body>
         </html>
     `);
 
     popoutWindow.document.close();
 
-    // Copy current canvas content
-    const popoutCanvas = popoutWindow.document.getElementById('popoutCanvas');
-    const popoutCtx = popoutCanvas.getContext('2d');
-    popoutCtx.drawImage(canvas, 0, 0);
+    // Move the canvasPane to the popout window
+    const container = popoutWindow.document.getElementById('canvasPaneContainer');
+    container.appendChild(canvasPane);
 
-    // Store reference for updating
-    state.popoutCanvas = popoutCanvas;
+    // Store reference
     state.popoutWindow = popoutWindow;
+
+    // Trigger scaling after canvas is moved
+    setTimeout(() => {
+        if (popoutWindow.scaleCanvases) {
+            popoutWindow.scaleCanvases();
+        }
+    }, 100);
 
     // Clear any existing window checker to prevent memory leak
     if (state.popoutWindowChecker) {
         clearInterval(state.popoutWindowChecker);
     }
 
-    // Listen for window close
+    // Listen for window close - move canvasPane back
     state.popoutWindowChecker = setInterval(() => {
         if (popoutWindow.closed) {
-            state.popoutCanvas = null;
+            // Move canvasPane back to main window
+            const mainOutputContent = document.getElementById('outputContent');
+            const consolePane = document.getElementById('consolePane');
+
+            // Insert canvasPane after consolePane
+            if (consolePane.nextSibling) {
+                mainOutputContent.insertBefore(canvasPane, consolePane.nextSibling);
+            } else {
+                mainOutputContent.appendChild(canvasPane);
+            }
+
+            // Reset scaling transforms to default centering
+            const turtleContainer = document.getElementById('turtleContainer');
+            if (turtleContainer) {
+                turtleContainer.style.transform = 'translate(-50%, -50%)';
+            }
+            const outputCanvas = document.getElementById('outputCanvas');
+            if (outputCanvas) {
+                outputCanvas.style.transform = 'translate(-50%, -50%)';
+            }
+
             state.popoutWindow = null;
             clearInterval(state.popoutWindowChecker);
             state.popoutWindowChecker = null;
@@ -578,16 +613,9 @@ function updateSavingIndicator(status) {
     }
 }
 
-// Helper to execute canvas operation on both main and popout canvases
-function execOnBothCanvases(operation) {
-    // Main canvas
+// Helper to execute canvas operation (canvas is now a single DOM element that moves between windows)
+function execOnCanvas(operation) {
     operation(state.canvasCtx);
-
-    // Popout canvas (if exists and window is still open)
-    if (state.popoutCanvas && state.popoutWindow && !state.popoutWindow.closed) {
-        const popoutCtx = state.popoutCanvas.getContext('2d');
-        operation(popoutCtx);
-    }
 }
 
 // Handle messages from worker
@@ -621,46 +649,46 @@ async function handleWorkerMessage(e) {
         case 'canvas-set-size':
             state.canvas.width = data.width;
             state.canvas.height = data.height;
-            if (state.popoutCanvas && state.popoutWindow && !state.popoutWindow.closed) {
-                state.popoutCanvas.width = data.width;
-                state.popoutCanvas.height = data.height;
-                // Trigger resize calculation in pop-out window
-                if (state.popoutWindow.updateCanvasSize) {
-                    state.popoutWindow.updateCanvasSize();
-                }
+            // Also resize turtle canvas to match
+            if (state.turtleAPI) {
+                state.turtleAPI.setSize(data.width, data.height);
+                // Re-register all turtles after resize
+                state.turtles = {};
+                state.turtles['turtle_0'] = state.turtleAPI.defaultTurtle;
             }
             markCanvasUsed();
+            scaleCanvasesToFit();
             break;
 
         case 'canvas-clear':
-            execOnBothCanvases(ctx => ctx.clearRect(0, 0, state.canvas.width, state.canvas.height));
+            execOnCanvas(ctx => ctx.clearRect(0, 0, state.canvas.width, state.canvas.height));
             markCanvasUsed();
             break;
 
         case 'canvas-set-fill-color':
-            execOnBothCanvases(ctx => ctx.fillStyle = data.color);
+            execOnCanvas(ctx => ctx.fillStyle = data.color);
             break;
 
         case 'canvas-set-stroke-color':
-            execOnBothCanvases(ctx => ctx.strokeStyle = data.color);
+            execOnCanvas(ctx => ctx.strokeStyle = data.color);
             break;
 
         case 'canvas-set-line-width':
-            execOnBothCanvases(ctx => ctx.lineWidth = data.width);
+            execOnCanvas(ctx => ctx.lineWidth = data.width);
             break;
 
         case 'canvas-fill-rect':
-            execOnBothCanvases(ctx => ctx.fillRect(data.x, data.y, data.width, data.height));
+            execOnCanvas(ctx => ctx.fillRect(data.x, data.y, data.width, data.height));
             markCanvasUsed();
             break;
 
         case 'canvas-stroke-rect':
-            execOnBothCanvases(ctx => ctx.strokeRect(data.x, data.y, data.width, data.height));
+            execOnCanvas(ctx => ctx.strokeRect(data.x, data.y, data.width, data.height));
             markCanvasUsed();
             break;
 
         case 'canvas-fill-circle':
-            execOnBothCanvases(ctx => {
+            execOnCanvas(ctx => {
                 ctx.beginPath();
                 ctx.arc(data.x, data.y, data.radius, 0, 2 * Math.PI);
                 ctx.fill();
@@ -669,7 +697,7 @@ async function handleWorkerMessage(e) {
             break;
 
         case 'canvas-stroke-circle':
-            execOnBothCanvases(ctx => {
+            execOnCanvas(ctx => {
                 ctx.beginPath();
                 ctx.arc(data.x, data.y, data.radius, 0, 2 * Math.PI);
                 ctx.stroke();
@@ -678,7 +706,7 @@ async function handleWorkerMessage(e) {
             break;
 
         case 'canvas-draw-line':
-            execOnBothCanvases(ctx => {
+            execOnCanvas(ctx => {
                 ctx.beginPath();
                 ctx.moveTo(data.x1, data.y1);
                 ctx.lineTo(data.x2, data.y2);
@@ -688,12 +716,51 @@ async function handleWorkerMessage(e) {
             break;
 
         case 'canvas-draw-text':
-            execOnBothCanvases(ctx => ctx.fillText(data.text, data.x, data.y));
+            execOnCanvas(ctx => ctx.fillText(data.text, data.x, data.y));
             markCanvasUsed();
             break;
 
         case 'canvas-set-font':
-            execOnBothCanvases(ctx => ctx.font = data.font);
+            execOnCanvas(ctx => ctx.font = data.font);
+            break;
+
+        // Turtle graphics handlers
+        case 'turtle-create':
+            // Create a new turtle instance
+            state.turtles[data.id] = new state.turtleAPI.Turtle(data.shape || 'classic');
+            markCanvasUsed();
+            break;
+
+        case 'turtle-method':
+            // Call a method on a specific turtle instance
+            const turtle = state.turtles[data.id];
+            if (turtle && typeof turtle[data.method] === 'function') {
+                turtle[data.method](...(data.args || []));
+                markCanvasUsed();
+            }
+            break;
+
+        case 'turtle-reset':
+            state.turtleAPI.reset();
+            // Re-register default turtle after reset
+            state.turtles['turtle_0'] = state.turtleAPI.defaultTurtle;
+            markCanvasUsed();
+            break;
+
+        case 'turtle-tracer':
+            state.turtleAPI.screen.tracer(data.n);
+            break;
+
+        case 'turtle-setup':
+            // Set canvas size (also updates regular canvas to match)
+            state.canvas.width = data.width;
+            state.canvas.height = data.height;
+            state.turtleAPI.setSize(data.width, data.height);
+            // Re-register all turtles after resize
+            state.turtles = {};
+            state.turtles['turtle_0'] = state.turtleAPI.defaultTurtle;
+            markCanvasUsed();
+            scaleCanvasesToFit();
             break;
 
         case 'files-loaded':
@@ -744,6 +811,37 @@ function finishExecution() {
     runBtn.classList.remove('stop');
 }
 
+// Scale canvases to fit the canvas pane in main window
+function scaleCanvasesToFit() {
+    const canvasPane = document.getElementById('canvasPane');
+    if (!canvasPane) return;
+
+    // Use most of available space, leave small margin
+    const paneWidth = canvasPane.clientWidth * 0.95;
+    const paneHeight = canvasPane.clientHeight * 0.95;
+
+    // Scale turtle container
+    const turtleContainer = document.getElementById('turtleContainer');
+    if (turtleContainer) {
+        const firstCanvas = turtleContainer.querySelector('canvas');
+        if (firstCanvas) {
+            const aspect = firstCanvas.width / firstCanvas.height;
+            const paneAspect = paneWidth / paneHeight;
+            let scale = paneAspect > aspect ? paneHeight / firstCanvas.height : paneWidth / firstCanvas.width;
+            turtleContainer.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+        }
+    }
+
+    // Scale old canvas API
+    const outputCanvas = document.getElementById('outputCanvas');
+    if (outputCanvas) {
+        const aspect = outputCanvas.width / outputCanvas.height;
+        const paneAspect = paneWidth / paneHeight;
+        let scale = paneAspect > aspect ? paneHeight / outputCanvas.height : paneWidth / outputCanvas.width;
+        outputCanvas.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+    }
+}
+
 // Initialize Worker
 async function initWorker() {
     const loadingMessage = document.getElementById('loadingMessage');
@@ -757,14 +855,31 @@ async function initWorker() {
             state.workerReady = false;
         }
 
-        // Create new worker
-        state.worker = new Worker('/js/worker.js');
+        // Create new worker (as module to support ES6 imports)
+        state.worker = new Worker('/js/worker.js', { type: 'module' });
 
         // Setup canvas reference
         state.canvas = document.getElementById('outputCanvas');
         state.canvasCtx = state.canvas.getContext('2d');
         state.canvas.width = 600;
         state.canvas.height = 400;
+
+        // Setup turtle graphics
+        state.turtleAPI = setupTurtleGraphics('canvasPane', {
+            onFirstCanvas: scaleCanvasesToFit
+        });
+
+        // Register default turtle as turtle_0 for Python module-level functions
+        state.turtles['turtle_0'] = state.turtleAPI.defaultTurtle;
+
+        // Setup canvas scaling on resize
+        const canvasPane = document.getElementById('canvasPane');
+        if (canvasPane && !state.resizeObserver) {
+            state.resizeObserver = new ResizeObserver(() => {
+                scaleCanvasesToFit();
+            });
+            state.resizeObserver.observe(canvasPane);
+        }
 
         // Setup worker message handler
         state.worker.onmessage = handleWorkerMessage;
@@ -827,8 +942,22 @@ async function runCode() {
     state.terminal.clear();
     state.terminal.write('>>> Running main.py...', 'info');
 
-    // Clear canvas
+    // Clear canvas and reset turtle
     state.canvasCtx.clearRect(0, 0, state.canvas.width, state.canvas.height);
+    if (state.turtleAPI) {
+        // Clean up all turtle paper layers before resetting
+        for (const id in state.turtles) {
+            const turtle = state.turtles[id];
+            if (turtle._paper && turtle._paper.canvas) {
+                turtle._paper.canvas.remove();
+            }
+        }
+
+        state.turtleAPI.reset();
+        // Clear all turtle references and re-register default turtle
+        state.turtles = {};
+        state.turtles['turtle_0'] = state.turtleAPI.defaultTurtle;
+    }
     updateOutputLayout();
 
     // Send files to worker

@@ -348,11 +348,24 @@
             background: #1e1e1e;
             min-width: 0;
             padding: 12px;
+            position: relative; /* For turtle canvas positioning */
+            overflow: hidden; /* Clip turtle drawing to pane bounds */
         }
 
+        /* Turtle container - centered as a unit, all layers stacked inside */
+        #turtleContainer {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Old canvas API from trifling.canvas - separate from turtle */
         #outputCanvas {
-            max-width: 100%;
-            max-height: 100%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             background: white;
             border: 1px solid #444;
         }

@@ -46,6 +46,10 @@ Local-first Python3 playground using Pyodide (WASM). All execution client-side. 
 - ANSI color codes (30-37 fg, 40-47 bg, 0 reset)
 - Web worker execution (non-blocking)
 
+## Python Code Style
+- **All imports at top**: Never use `from js import` inside functions - put all imports at module level
+- Follows PEP 8 conventions
+
 ## KV Sync Schema
 ```
 data/
