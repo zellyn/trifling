@@ -295,8 +295,12 @@ function initShapePalette() {
         const preview = createShapePreview(type, info.color);
         item.innerHTML = preview;
 
+        // Track if we're dragging to prevent click after drag
+        let isDraggingPalette = false;
+
         // Drag start
         item.addEventListener('dragstart', (e) => {
+            isDraggingPalette = true;
             e.dataTransfer.setData('shapeType', type);
 
             // Create a drag image that matches the actual dropped size
@@ -307,6 +311,42 @@ function initShapePalette() {
 
             // Remove the preview after a short delay
             setTimeout(() => dragPreview.remove(), 0);
+        });
+
+        // Reset drag flag after drag ends
+        item.addEventListener('dragend', (e) => {
+            isDraggingPalette = false;
+        });
+
+        // Click to add shape at center of canvas
+        item.addEventListener('click', (e) => {
+            // Don't handle click if we just finished dragging
+            if (isDraggingPalette) {
+                isDraggingPalette = false;
+                return;
+            }
+
+            // Check if we've reached the maximum number of shapes
+            const MAX_SHAPES = 200;
+            if (shapes.length >= MAX_SHAPES) {
+                showError(`Maximum of ${MAX_SHAPES} shapes reached`);
+                return;
+            }
+
+            // Add shape at center of canvas (100, 100 in viewBox coordinates)
+            const newId = getNextShapeId(shapes);
+            const newShape = createShape(type, 100, 100, info.color, newId);
+            shapes.push(newShape);
+
+            // Select the newly added shape
+            selectedShapeId = newShape.id;
+
+            // Disable undo when user adds a shape
+            disableUndo();
+
+            // Update canvas and controls
+            updateCanvas();
+            updateShapeControls();
         });
 
         palette.appendChild(item);

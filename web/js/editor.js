@@ -960,10 +960,42 @@ async function runCode() {
     }
     updateOutputLayout();
 
+    // Load all trifles for import support
+    let availableTrifles = [];
+    try {
+        const currentUser = await TrifleDB.getCurrentUser();
+        if (currentUser) {
+            const allTrifles = await TrifleDB.getTriflesByOwner(currentUser.id);
+
+            // Load trifle data and main.py for each trifle
+            for (const trifle of allTrifles) {
+                const trifleData = await TrifleDB.getTrifleData(trifle.id);
+                if (trifleData) {
+                    // Find main.py
+                    const mainFile = trifleData.files.find(f => f.path === 'main.py');
+                    if (mainFile) {
+                        const code = await TrifleDB.getContent(mainFile.hash);
+                        availableTrifles.push({
+                            id: trifle.id,
+                            name: trifleData.name,
+                            code: code || ''
+                        });
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error loading trifles for imports:', error);
+        // Continue anyway - imports will just fail
+    }
+
     // Send files to worker
     state.worker.postMessage({
         type: 'load-files',
-        files: state.files.map(f => ({ path: f.path, content: f.content }))
+        files: state.files.map(f => ({ path: f.path, content: f.content })),
+        ownerId: (await TrifleDB.getCurrentUser())?.id,
+        trifleId: state.trifleId,
+        availableTrifles: availableTrifles
     });
 
     // Send run command

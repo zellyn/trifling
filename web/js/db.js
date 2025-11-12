@@ -406,6 +406,27 @@ async function getTriflesByOwner(ownerId) {
 }
 
 /**
+ * Find trifles by name for a user
+ *
+ * @param {string} ownerId - User ID
+ * @param {string} name - Trifle name to search for
+ * @returns {Promise<Array>} - Array of matching trifle objects (with data included)
+ */
+async function findTriflesByName(ownerId, name) {
+    const trifles = await getTriflesByOwner(ownerId);
+    const matches = [];
+
+    for (const trifle of trifles) {
+        const trifleData = await getContent(trifle.current_hash);
+        if (trifleData && trifleData.name === name) {
+            matches.push({ ...trifle, ...trifleData });
+        }
+    }
+
+    return matches;
+}
+
+/**
  * Update trifle data (creates new hash, updates pointer)
  *
  * @param {string} trifleId - Trifle ID
@@ -577,6 +598,7 @@ export const TrifleDB = {
     getTrifle,
     getTrifleData,
     getTriflesByOwner,
+    findTriflesByName,
     updateTrifle,
     deleteTrifle,
 

@@ -174,11 +174,30 @@ Added complete turtle graphics implementation compatible with Skulpt's turtle AP
 - Position and heading management
 - Shape rendering (turtle, arrow, circle, etc.)
 
+### Session 9: Trifle Imports & Avatar UX
+**[aeb7d53f](md/aeb7d53f-bb18-458c-8456-a40dc820eacf.md)** · November 11, 2025
+
+Added library import system and improved avatar editor discoverability.
+
+- **Trifle import system**: `from trifling.mine.library_name import function`
+  - Import from other trifles' main.py files
+  - Custom Python import hook with preloading
+  - Duplicate name detection with helpful errors
+  - Self-import prevention
+  - Caches trifle code for performance
+- **Avatar editor improvements**
+  - Click palette items to add shapes (in addition to drag-and-drop)
+  - Shapes appear at canvas center with selection handles
+  - More discoverable for new users
+- **Credits**: Added Skulpt attribution in about.html
+- Service worker updates (v115 → v124)
+- Updated CLAUDE.md with service worker bump reminder
+
 ## Statistics
 
-- **Total Sessions:** 10 substantive sessions (4 warmup sessions excluded)
+- **Total Sessions:** 9 substantive sessions (4 warmup sessions excluded)
 - **Development Period:** October 18 - November 11, 2025 (24 days)
-- **Total Conversation Entries:** 7,133 exchanges
+- **Total Conversation Entries:** 7,000+ exchanges
 - **Major Architectural Pivots:** 3
   - SQLite → IndexedDB local-first
   - Complex backend → Pure KV store

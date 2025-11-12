@@ -40,6 +40,11 @@ Local-first Python3 playground using Pyodide (WASM). All execution client-side. 
 - Query params: strips them for cache matching (e.g., `/editor.html?id=xyz` → `/editor.html`)
 - Never caches `/api/*` endpoints
 - Version format: `v{number}` - increment when changing cache logic
+- **IMPORTANT**: Bump `CACHE_VERSION` in `web/sw.js` whenever you modify:
+  - Any JavaScript file in `web/js/`
+  - Any HTML file in `web/`
+  - Any CSS file in `web/css/`
+  - The service worker itself
 
 ## Python Features
 - `input()` with terminal-style prompt

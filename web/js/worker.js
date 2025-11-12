@@ -1,10 +1,12 @@
 // Trifle Worker - Runs Python code in Web Worker to avoid blocking UI
 // Communicates with main thread via JSON message protocol
 
-import { setupPythonEnvironment, handleInputResponse as handleInputResponseFromEnv } from './python-env.js';
+import { setupPythonEnvironment, handleInputResponse as handleInputResponseFromEnv, setImportContext, preloadTrifle } from './python-env.js';
 
 let pyodide = null;
 let isRunning = false;
+let currentOwnerId = null;
+let currentTrifleId = null;
 
 // Message helpers
 function send(type, data = {}) {
@@ -65,8 +67,52 @@ async function handleInit({ pyodideVersion }) {
 }
 
 // Load files into Pyodide filesystem
-async function handleLoadFiles({ files }) {
+async function handleLoadFiles({ files, ownerId, trifleId, availableTrifles }) {
     try {
+        // Store context for imports
+        currentOwnerId = ownerId;
+        currentTrifleId = trifleId;
+        setImportContext(ownerId, trifleId);
+
+        // Preload available trifles for imports
+        if (availableTrifles) {
+            // Build a map of trifle names to check for duplicates
+            const nameMap = new Map();
+            for (const trifle of availableTrifles) {
+                if (!nameMap.has(trifle.name)) {
+                    nameMap.set(trifle.name, []);
+                }
+                nameMap.get(trifle.name).push(trifle);
+            }
+
+            // Preload each unique name
+            for (const [name, trifles] of nameMap.entries()) {
+                if (trifles.length > 1) {
+                    // Multiple trifles with same name
+                    const errorResult = JSON.stringify({
+                        error: `Multiple trifles named '${name}' found. Please rename to make unique.`
+                    });
+                    preloadTrifle(name, errorResult);
+                } else {
+                    const trifle = trifles[0];
+                    // Check for self-import
+                    if (trifle.id === trifleId) {
+                        const errorResult = JSON.stringify({
+                            error: `Cannot import from current trifle '${name}' (self-import not allowed)`
+                        });
+                        preloadTrifle(name, errorResult);
+                    } else {
+                        // Normal case: preload the trifle code
+                        const result = JSON.stringify({
+                            code: trifle.code,
+                            id: trifle.id
+                        });
+                        preloadTrifle(name, result);
+                    }
+                }
+            }
+        }
+
         for (const file of files) {
             // Create parent directories if needed
             const parts = file.path.split('/');

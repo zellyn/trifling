@@ -21,6 +21,40 @@ export function handleInputResponse({ value }) {
     }
 }
 
+// Store references needed for trifle imports
+let currentOwnerId = null;
+let currentTrifleId = null;
+let loadedTrifles = new Map(); // Cache loaded trifles
+
+// Function to set current context (called from worker when loading files)
+export function setImportContext(ownerId, trifleId) {
+    currentOwnerId = ownerId;
+    currentTrifleId = trifleId;
+    loadedTrifles.clear(); // Clear cache on new run
+}
+
+// Synchronous trifle code getter (called from Python import hook)
+self._getTrifleCode = (trifleName) => {
+    // Check if already loaded (cache)
+    if (loadedTrifles.has(trifleName)) {
+        return loadedTrifles.get(trifleName);
+    }
+
+    // This will be called synchronously from Python, so we need to have
+    // pre-loaded all trifles. We'll do this when files are loaded.
+    const result = JSON.stringify({
+        error: `Trifle '${trifleName}' not found. Make sure the trifle exists and is owned by the current user.`
+    });
+
+    return result;
+};
+
+// Function to preload a trifle (called from worker before running code)
+// jsonResult should be a JSON string with {code, id} or {error}
+export function preloadTrifle(name, jsonResult) {
+    loadedTrifles.set(name, jsonResult);
+}
+
 // Setup Python environment (stdout/stderr capture, input, canvas API, trifling module)
 export async function setupPythonEnvironment(pyodide, send) {
     // Make worker message sender available to Python via the js module
@@ -185,14 +219,81 @@ class Canvas:
         """Set font (CSS font string, e.g. '16px Arial')."""
         self._send('canvas-set-font', {'font': font})
 
-# Create trifling module with canvas
+# Create trifling module with canvas and mine submodule
+import sys
+import types
+
+# Create mine as a proper module that can have submodules
+mine_module = types.ModuleType('trifling.mine')
+mine_module.__doc__ = "Submodule for importing user's own trifles"
+mine_module.__package__ = 'trifling.mine'
+mine_module.__path__ = []  # This makes it a package
+
 class TriflingModule:
     def __init__(self):
         self.canvas = Canvas()
+        self.mine = mine_module
 
-import sys
 trifling = TriflingModule()
 sys.modules['trifling'] = trifling
+sys.modules['trifling.mine'] = mine_module
+
+# Custom import hook for trifling.mine.* imports
+import sys
+from importlib.abc import MetaPathFinder, Loader
+from importlib.machinery import ModuleSpec
+import types
+
+class TriflingMineImporter(MetaPathFinder, Loader):
+    """Import hook for trifling.mine.* modules"""
+
+    def find_spec(self, fullname, path, target=None):
+        """Find module spec for trifling.mine.* imports"""
+        if fullname.startswith('trifling.mine.') and fullname.count('.') == 2:
+            # Extract trifle name: trifling.mine.foo -> foo
+            return ModuleSpec(fullname, self, origin='trifle-import')
+        return None
+
+    def create_module(self, spec):
+        """Return None to use default module creation"""
+        return None
+
+    def exec_module(self, module):
+        """Load trifle code into the module"""
+        fullname = module.__name__
+        trifle_name = fullname.split('.')[-1]
+
+        # Request trifle code from JavaScript
+        # This will be handled by the worker message system
+        from js import _getTrifleCode
+        import json
+
+        try:
+            result_json = _getTrifleCode(trifle_name)
+            result = json.loads(result_json)
+
+            if result.get('error'):
+                raise ImportError(result['error'])
+
+            code = result.get('code', '')
+
+            if not code:
+                raise ImportError(f"Trifle '{trifle_name}' has no code")
+
+            # Set up module metadata
+            module.__file__ = f'<trifle:{trifle_name}>'
+            module.__package__ = fullname.rsplit('.', 1)[0]
+
+            # Execute the trifle's main.py code in this module's namespace
+            exec(code, module.__dict__)
+
+        except ImportError:
+            raise
+        except Exception as e:
+            raise ImportError(f"Failed to import trifle '{trifle_name}': {e}")
+
+# Install the import hook
+sys.meta_path.insert(0, TriflingMineImporter())
 `);
 
     // Turtle graphics will be set up via message passing to main thread
