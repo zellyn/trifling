@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Trifling Documentation</title>
+    <meta name="description" content="">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+    <header class="app-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">Trifling</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/learn.html" class="active">Learn</a>
+                <a href="/about.html">About</a>
+            </div>
+            <div class="nav-auth" id="nav-auth"></div>
+        </nav>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <h2>Documentation</h2>
+            <nav class="docs-nav">
+                <div class="docs-category">
+                    <h3>Getting Started</h3>
+                    <a href="/static/docs/intro.html">Introduction</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Graphics</h3>
+                    <a href="/static/docs/turtle.html">Turtle Graphics</a>
+                    <a href="/static/docs/canvas.html">Canvas API</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Advanced</h3>
+                    <a href="/static/docs/imports.html">Trifle Imports</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="docs-content">
+            <article class="doc-article">
+                <h1>Trifle Development Sessions</h1>
+<p>This directory contains the complete AI-assisted development history of <a href="https://trifling.org">trifling.org</a>, a local-first Python playground for education. Every feature, architectural decision, and bug fix was built through conversations with Claude Code.</p>
+<h2>About This Documentation</h2>
+<p>As noted in <a href="../../CONTRIBUTING.md">CONTRIBUTING.md</a>, code can only be added to this project via AI assistance. These session logs provide a complete audit trail of the project's evolution from initial concept to production deployment. What started as a half-serious experiment has become an interesting artifact of AI-assisted development.</p>
+<h2>Directory Structure</h2>
+<ul>
+<li><code>md/</code> - Human-readable Markdown conversions of each session</li>
+<li><code>claude_to_markdown.py</code> - Conversion script with automatic redaction (based on <a href="https://github.com/simonw/tools">simonw/tools</a>)</li>
+</ul>
+<p>Note: Raw JSONL files are not stored in the repository due to their size (90MB+). The markdown files contain all conversation content with sensitive information redacted.</p>
+<h2>Development Timeline</h2>
+<h3>Session 1: Project Foundation</h3>
+<p><strong><a href="md/d5409a5c-5620-4945-a0e4-2043c94a8f5d.md">d5409a5c</a></strong> · October 18, 2025 · 8 hours</p>
+<p>The beginning. Built the foundational architecture with Google OAuth, SQLite database using sqlc, and comprehensive security fixes.</p>
+<ul>
+<li>Initial project setup</li>
+<li>Google OAuth with email allowlist enforcement</li>
+<li>Victorian-era adjective-noun name generator (64×64 combinations)</li>
+<li>Database schema design with prefixed IDs (<code>trifle_</code>, <code>account_</code>, <code>login_</code>)</li>
+<li>Security fixes: XSS vulnerability, session fixation, CSRF protection</li>
+<li>Created PLAN.md, README.md, and CLAUDE.md documentation</li>
+<li>First GitHub commit</li>
+</ul>
+<h3>Session 2: The Marathon Session</h3>
+<p><strong><a href="md/3a348ab7-292d-4193-bf84-25e452ad87cd.md">3a348ab7</a></strong> · October 19, 2025 · 20 hours</p>
+<p>A massive session that fundamentally transformed the architecture from server-backed to local-first.</p>
+<ul>
+<li>Started implementing Phase 3 backend API (Trifle/file CRUD endpoints)</li>
+<li>Built Ace editor integration with auto-save</li>
+<li>Added Pyodide (Python in WebAssembly) with Web Worker for non-blocking execution</li>
+<li>Created canvas API for graphics programming with pop-out window</li>
+<li>Implemented terminal with <code>input()</code> support and ANSI color parsing</li>
+<li><strong>Major architectural pivot: Removed SQLite entirely, migrated to IndexedDB local-first storage</strong></li>
+<li>Content-addressable file storage with SHA-256 hashing</li>
+<li>Service worker for offline capability</li>
+<li>Random name generation for trifles</li>
+</ul>
+<p><strong>Notable:</strong> This session shows the dramatic shift from traditional web app to local-first architecture happening in real-time.</p>
+<h3>Session 3: The Three-Agent Experiment</h3>
+<p><strong>October 19, 2025 · Parallel Sessions</strong></p>
+<p>An ambitious (and somewhat embarrassing) attempt to coordinate three separate Claude Code instances working simultaneously on different parts of the codebase. They communicated via temporary markdown files as a file-based RPC mechanism.</p>
+<h4><a href="md/43056adb-de96-4637-849f-4b5416460547.md">Session 2: Backend Refactor</a></h4>
+<p><em>21:38 - 22:31 (53 minutes)</em></p>
+<ul>
+<li>Created name generator module (web/js/namegen.js) matching Go backend word lists</li>
+<li>Pivoted to Phase 2 backend refactoring: SQLite → flat-file storage</li>
+<li>Implemented content-addressable storage system</li>
+<li>Built sync API endpoints</li>
+<li>Coordinated via <code>session2-1.md</code>, <code>session2-3.md</code> message files</li>
+</ul>
+<h4><a href="md/a6163e97-5975-4452-9abd-c5411a63f2fa.md">Session 3: UI Layer</a></h4>
+<p><em>21:38 - 22:11 (33 minutes)</em></p>
+<ul>
+<li>Built landing page and trifle list HTML/CSS</li>
+<li>Dark theme styling matching editor</li>
+<li>Accessibility improvements (ARIA labels, focus styles, reduced motion)</li>
+<li>Mobile-responsive design</li>
+<li>Created integration layer (web/js/app.js)</li>
+</ul>
+<h4><a href="md/01286751-0bad-40d9-976d-23d312a321a6.md">Session 1: Integration &amp; Documentation</a></h4>
+<p><em>22:24 - 22:50 (26 minutes)</em></p>
+<ul>
+<li>Built IndexedDB layer with content-addressable storage</li>
+<li>Reviewed backend OAuth implementation</li>
+<li>Updated documentation to use 1Password CLI for credentials</li>
+<li>Integrated all three parallel work streams</li>
+</ul>
+<p><strong>Notable:</strong> While the multi-agent coordination worked, it was overly complex. The sessions accomplished important work but demonstrated that simpler approaches are often better.</p>
+<h3>Session 4: Local-First Completion</h3>
+<p><strong><a href="md/8a0e2c97-0e3d-428a-9493-bbbef72ba827.md">8a0e2c97</a></strong> · October 20-22, 2025 · Multi-day</p>
+<p>Completed the local-first transformation with bidirectional sync and production deployment configuration.</p>
+<ul>
+<li>Finished hybrid UI redesign with light theme restoration</li>
+<li>Implemented complete bidirectional sync with KV store</li>
+<li>Fixed seven distinct sync bugs:
+<ul>
+<li>Hash verification failures</li>
+<li>Logical clock conflicts</li>
+<li>JSON canonicalization for deterministic hashing</li>
+<li>Offline editor loading</li>
+<li>Profile synchronization</li>
+<li>Username flashing after sync</li>
+<li>Query parameter handling in service worker</li>
+</ul>
+</li>
+<li>Added WebAssembly detection with helpful error messages</li>
+<li>Modal UX improvements (auto-focus, Cmd+Enter to submit, Esc to cancel)</li>
+<li>Refactored environment variables for reverse proxy compatibility</li>
+<li>Service worker versioned from v1 through v15</li>
+<li>Production deployment configuration</li>
+<li>License changed from MIT to GPLv3</li>
+</ul>
+<h3>Session 5: KV Store Refactor</h3>
+<p><strong><a href="md/686c6e76-64a0-4b21-b599-2cec3bdc5a2d.md">686c6e76</a></strong> · October 21-22, 2025 · 2 days</p>
+<p>Major architectural insight led to complete backend redesign as pure key-value store.</p>
+<ul>
+<li>Started with hash mismatch bug fix</li>
+<li><strong>Architectural pivot: &quot;What if the server does three things: OAuth dance, store key/values without looking at values, return list of keys with prefix&quot;</strong></li>
+<li>Deleted entire <code>internal/db/</code>, <code>internal/api/</code>, <code>internal/sync/</code> directories</li>
+<li>Removed SQLite dependency completely</li>
+<li>Implemented file-based KV store (internal/kv/)</li>
+<li>Bidirectional sync with logical clocks for conflict resolution</li>
+<li>Service worker improvements for offline support</li>
+<li>Environment variable configuration (PORT, OAUTH_REDIRECT_URL)</li>
+<li>Production deployment to trifling.org</li>
+<li>WebAssembly troubleshooting (undefined in Chrome, working in Safari)</li>
+<li>Major commit: 38 files changed, 3382 insertions, 4071 deletions</li>
+</ul>
+<p><strong>Notable:</strong> This session demonstrates the power of stepping back and rethinking fundamental assumptions.</p>
+<h3>Session 6: Email Allowlist &amp; Notifications</h3>
+<p><strong><a href="md/88fcc9b5-d979-4b0c-8617-2db43bdf6408.md">88fcc9b5</a></strong> · October 24-25, 2025</p>
+<p>Improved access control and UX polish to make the app more welcoming without requiring login.</p>
+<ul>
+<li>Email allowlist system with <code>data/allowlist.txt</code></li>
+<li>Domain wildcard support (<code>@example.com</code> matches any @example.com address)</li>
+<li>Replaced 17 <code>alert()</code> calls with dismissible notification banner system</li>
+<li>OAuth error handling improvements</li>
+<li>UI restructuring to de-emphasize login/sync (moved to footer)</li>
+<li>Early avatar editor experiments (button-based mad-lib style)</li>
+<li>Service worker versioning (v16-v20+)</li>
+<li>Email-based authentication (no user IDs, email is identity)</li>
+</ul>
+<h3>Session 7: Avatar Editor &amp; Data Import/Export</h3>
+<p><strong><a href="md/1377bdb9-452e-4370-b3a1-383ea236ceea.md">1377bdb9</a></strong> · October 25-26, 2025 · 2 days</p>
+<p>Added creative personalization features and local backup capabilities.</p>
+<ul>
+<li><strong>Felt-style drag-and-drop avatar editor</strong>
+<ul>
+<li>Shape palette: circles, ellipses, rectangles, body shapes, facial features</li>
+<li>Drag to move, handles for resize/rotate</li>
+<li>Option-drag to duplicate shapes (with visual ghosting effect)</li>
+<li>200 shape limit with auto-delete when dragged off canvas</li>
+<li>Integer-based shape IDs (finds lowest unused ID)</li>
+<li>Z-order controls (send to front/back)</li>
+<li>Persisted in user profile as SVG data</li>
+</ul>
+</li>
+<li><strong>Data import/export system</strong>
+<ul>
+<li>Selective export with checkboxes (profile + individual trifles)</li>
+<li>Smart conflict resolution based on timestamps</li>
+<li>Recommendations for import/skip/overwrite decisions</li>
+<li>Bulk actions (Import All, Skip All, Use Recommendations)</li>
+<li>JSON format with embedded file contents</li>
+</ul>
+</li>
+<li>Footer sync button for subtle OAuth access</li>
+<li>Service worker updates (v56 → v60)</li>
+<li>Documentation consolidation (removed PLAN.md, updated CLAUDE.md)</li>
+<li>Three git commits with comprehensive changes</li>
+</ul>
+<p><strong>Notable:</strong> Fixed shape ID collision bug where <code>nextShapeId</code> counter reset on page load, causing duplicate IDs with saved shapes.</p>
+<h3>Session 8: Turtle Graphics</h3>
+<p><strong><a href="md/7fc774db-c625-45d4-862a-12cccf732512.md">7fc774db</a></strong> · November 11, 2025</p>
+<p>Added complete turtle graphics implementation compatible with Skulpt's turtle API.</p>
+<ul>
+<li>JavaScript-based implementation for performance (adapted from Skulpt's turtle.js)</li>
+<li>Full Python <code>turtle</code> module with standard API</li>
+<li>Multiple turtle support with independent state</li>
+<li>Canvas integration with existing graphics system</li>
+<li>Screen management with tracer/update for animation control</li>
+<li>Complete drawing primitives (forward, backward, circle, etc.)</li>
+<li>Color and pen control (penup/pendown, color, width)</li>
+<li>Position and heading management</li>
+<li>Shape rendering (turtle, arrow, circle, etc.)</li>
+</ul>
+<h3>Session 9: Trifle Imports &amp; Avatar UX</h3>
+<p><strong><a href="md/aeb7d53f-bb18-458c-8456-a40dc820eacf.md">aeb7d53f</a></strong> · November 11, 2025</p>
+<p>Added library import system and improved avatar editor discoverability.</p>
+<ul>
+<li><strong>Trifle import system</strong>: <code>from trifling.mine.library_name import function</code>
+<ul>
+<li>Import from other trifles' main.py files</li>
+<li>Custom Python import hook with preloading</li>
+<li>Duplicate name detection with helpful errors</li>
+<li>Self-import prevention</li>
+<li>Caches trifle code for performance</li>
+</ul>
+</li>
+<li><strong>Avatar editor improvements</strong>
+<ul>
+<li>Click palette items to add shapes (in addition to drag-and-drop)</li>
+<li>Shapes appear at canvas center with selection handles</li>
+<li>More discoverable for new users</li>
+</ul>
+</li>
+<li><strong>Credits</strong>: Added Skulpt attribution in about.html</li>
+<li>Service worker updates (v115 → v124)</li>
+<li>Updated CLAUDE.md with service worker bump reminder</li>
+</ul>
+<h2>Statistics</h2>
+<ul>
+<li><strong>Total Sessions:</strong> 9 substantive sessions (4 warmup sessions excluded)</li>
+<li><strong>Development Period:</strong> October 18 - November 11, 2025 (24 days)</li>
+<li><strong>Total Conversation Entries:</strong> 7,000+ exchanges</li>
+<li><strong>Major Architectural Pivots:</strong> 3
+<ul>
+<li>SQLite → IndexedDB local-first</li>
+<li>Complex backend → Pure KV store</li>
+<li>Server-first → Optional sync</li>
+</ul>
+</li>
+<li><strong>Service Worker Versions:</strong> 60+ iterations</li>
+<li><strong>Git Commits:</strong> Multiple throughout development</li>
+<li><strong>Lines of Code Changed:</strong> Thousands (exact count varies by session)</li>
+</ul>
+<h2>Key Architectural Decisions</h2>
+<ol>
+<li><strong>Local-first design</strong> - All data in browser IndexedDB, no account required</li>
+<li><strong>Content-addressable storage</strong> - Files stored by SHA-256 hash, globally deduplicated</li>
+<li><strong>Pure KV store</strong> - Server never parses user data, just stores encrypted blobs</li>
+<li><strong>Email-based identity</strong> - No user IDs, email is the key</li>
+<li><strong>Logical clocks</strong> - Conflict resolution for bidirectional sync</li>
+<li><strong>WebAssembly required</strong> - Editor checks and shows helpful error if unavailable</li>
+<li><strong>Offline-capable</strong> - Service worker caches entire app</li>
+</ol>
+<h2>Interesting Moments</h2>
+<ul>
+<li><strong>Multi-agent coordination via markdown files</strong> - Three Claude instances using file-based RPC</li>
+<li><strong>Real-time architectural pivots</strong> - Watching fundamental design changes happen mid-session</li>
+<li><strong>Service worker iteration</strong> - Version numbers climbing from v1 to v60+ across sessions</li>
+<li><strong>Security findings</strong> - XSS and session fixation bugs caught during development</li>
+<li><strong>The SQLite deletion</strong> - Entire database layer removed in favor of simpler approach</li>
+</ul>
+<h2>How to Use These Logs</h2>
+<p>Each session link leads to a detailed markdown file showing the complete conversation, including:</p>
+<ul>
+<li>User requests and Claude's responses</li>
+<li>Code changes with full context</li>
+<li>Architectural discussions and decisions</li>
+<li>Bug fixes and debugging processes</li>
+<li>Tool usage (file reads, edits, bash commands, etc.)</li>
+</ul>
+<p>You can see exactly how every feature was built, every bug was fixed, and every decision was made.</p>
+<h2>Contributing</h2>
+<p>See <a href="../../CONTRIBUTING.md">CONTRIBUTING.md</a> for the project's unique contribution policy: code can only be added via AI assistance. These logs demonstrate what that looks like in practice.</p>
+<hr>
+<p><em>Generated from Claude Code conversation logs using <a href="claude_to_markdown.py">claude_to_markdown.py</a></em></p>
+
+            </article>
+        </main>
+    </div>
+
+    <script src="/js/terminal.js"></script>
+    <script type="module" src="/js/snippet-runner.js"></script>
+    <script>
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

@@ -341,5 +341,5 @@ class Terminal {
     }
 }
 
-// Export for use in editor.js
+// Export for use in editor.js and snippet-runner.js
 window.Terminal = Terminal;

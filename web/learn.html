@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Python - Trifling Documentation</title>
+    <meta name="description" content="Interactive Python tutorials and documentation for Trifling">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+    <header class="app-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">Trifling</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/learn.html" class="active">Learn</a>
+                <a href="/about.html">About</a>
+            </div>
+            <div class="nav-auth" id="nav-auth"></div>
+        </nav>
+    </header>
+
+    <div class="docs-landing">
+        <div class="docs-hero">
+            <h1>Learn Python with Trifling</h1>
+            <p>Interactive tutorials with runnable code examples. No setup required.</p>
+        </div>
+
+        <div class="docs-grid">
+            <a href="/static/docs/intro.html" class="doc-card">
+                <h2>🚀 Getting Started</h2>
+                <p>Learn the basics of Python programming right in your browser.</p>
+            </a>
+
+            <a href="/static/docs/turtle.html" class="doc-card">
+                <h2>🐢 Turtle Graphics</h2>
+                <p>Create beautiful drawings and animations with turtle graphics.</p>
+            </a>
+
+            <a href="/static/docs/canvas.html" class="doc-card">
+                <h2>🎨 Canvas API</h2>
+                <p>Draw directly on the canvas with shapes, colors, and images.</p>
+            </a>
+
+            <a href="/static/docs/imports.html" class="doc-card">
+                <h2>🔗 Trifle Imports</h2>
+                <p>Share code between trifles with the import system.</p>
+            </a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initAuth } from '/js/app.js';
+        initAuth();
+    </script>
+    <script>
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

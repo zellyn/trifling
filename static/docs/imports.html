@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trifle Imports - Trifling Documentation</title>
+    <meta name="description" content="Share code between trifles with the import system">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+    <header class="app-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">Trifling</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/learn.html" class="active">Learn</a>
+                <a href="/about.html">About</a>
+            </div>
+            <div class="nav-auth" id="nav-auth"></div>
+        </nav>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <h2>Documentation</h2>
+            <nav class="docs-nav">
+                <div class="docs-category">
+                    <h3>Getting Started</h3>
+                    <a href="/static/docs/intro.html">Introduction</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Graphics</h3>
+                    <a href="/static/docs/turtle.html">Turtle Graphics</a>
+                    <a href="/static/docs/canvas.html">Canvas API</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Advanced</h3>
+                    <a href="/static/docs/imports.html">Trifle Imports</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="docs-content">
+            <article class="doc-article">
+                <h1>Trifle Imports</h1>
+<p>Trifling lets you import code from other trifles, making it easy to share utilities, libraries, and modules across your projects.</p>
+<h2>Basic Import</h2>
+<p>To import from another trifle, use the special <code>trifling.mine</code> package:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="# Import from a trifle&#10;from trifling.mine.my_utils import greeting&#10;&#10;# Use the imported function&#10;message = greeting(&#34;World&#34;)&#10;print(message)&#10;"></div><div class="snippet-output"></div></div>
+<p>This will:</p>
+<ol>
+<li>Look for a trifle named &quot;my_utils&quot; in your collection</li>
+<li>Load its <code>main.py</code> file</li>
+<li>Import the <code>greeting</code> function</li>
+</ol>
+<h2>Creating a Module Trifle</h2>
+<p>Let's say you create a trifle called &quot;math_helpers&quot; with this code in <code>main.py</code>:</p>
+<pre><code class="language-python">def double(n):
+    return n * 2
+
+def square(n):
+    return n ** 2
+
+def is_even(n):
+    return n % 2 == 0
+
+PI = 3.14159
+</code></pre>
+<p>Now you can import it from any other trifle:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.mine.math_helpers import double, square, is_even, PI&#10;&#10;print(f&#34;Double 5: {double(5)}&#34;)&#10;print(f&#34;Square 7: {square(7)}&#34;)&#10;print(f&#34;Is 8 even? {is_even(8)}&#34;)&#10;print(f&#34;Pi: {PI}&#34;)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Import Patterns</h2>
+<h3>Import Everything</h3>
+<pre><code class="language-python">from trifling.mine.my_module import *
+</code></pre>
+<h3>Import Specific Items</h3>
+<pre><code class="language-python">from trifling.mine.my_module import func1, func2, MY_CONSTANT
+</code></pre>
+<h3>Import with Alias</h3>
+<pre><code class="language-python">from trifling.mine.very_long_name import something as short_name
+</code></pre>
+<h2>Multi-File Trifles</h2>
+<p>If your trifle has multiple files, you can specify which file to import from:</p>
+<pre><code class="language-python"># Import from helpers.py instead of main.py
+from trifling.mine.my_project.helpers import utility_function
+</code></pre>
+<h2>Example: Color Utilities</h2>
+<p>Create a trifle named &quot;colors&quot; with useful color functions:</p>
+<pre><code class="language-python"># In trifle &quot;colors&quot; - main.py
+
+def hex_to_rgb(hex_color):
+    &quot;&quot;&quot;Convert hex color to RGB tuple&quot;&quot;&quot;
+    hex_color = hex_color.lstrip('#')
+    return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+def rgb_to_hex(r, g, b):
+    &quot;&quot;&quot;Convert RGB to hex color&quot;&quot;&quot;
+    return f'#{r:02x}{g:02x}{b:02x}'
+
+def lighten(hex_color, percent):
+    &quot;&quot;&quot;Lighten a color by percentage&quot;&quot;&quot;
+    r, g, b = hex_to_rgb(hex_color)
+    r = min(255, int(r + (255 - r) * percent / 100))
+    g = min(255, int(g + (255 - g) * percent / 100))
+    b = min(255, int(b + (255 - b) * percent / 100))
+    return rgb_to_hex(r, g, b)
+
+# Common colors
+RED = &quot;#FF0000&quot;
+GREEN = &quot;#00FF00&quot;
+BLUE = &quot;#0000FF&quot;
+</code></pre>
+<p>Then use it in another trifle:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.mine.colors import hex_to_rgb, lighten, RED, BLUE&#10;&#10;print(f&#34;Red in RGB: {hex_to_rgb(RED)}&#34;)&#10;print(f&#34;Blue in RGB: {hex_to_rgb(BLUE)}&#34;)&#10;print(f&#34;Lighter red: {lighten(RED, 30)}&#34;)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Example: Drawing Helpers</h2>
+<p>Create a trifle named &quot;draw_helpers&quot; with canvas utilities:</p>
+<pre><code class="language-python"># In trifle &quot;draw_helpers&quot; - main.py
+
+from trifling.canvas import ctx, Math
+
+def draw_circle(x, y, radius, color):
+    &quot;&quot;&quot;Draw a filled circle&quot;&quot;&quot;
+    ctx.fillStyle = color
+    ctx.beginPath()
+    ctx.arc(x, y, radius, 0, 2 * Math.PI)
+    ctx.fill()
+
+def draw_rect(x, y, width, height, color):
+    &quot;&quot;&quot;Draw a filled rectangle&quot;&quot;&quot;
+    ctx.fillStyle = color
+    ctx.fillRect(x, y, width, height)
+
+def draw_star(cx, cy, spikes, outer_radius, inner_radius, color):
+    &quot;&quot;&quot;Draw a star shape&quot;&quot;&quot;
+    ctx.fillStyle = color
+    ctx.beginPath()
+    for i in range(spikes * 2):
+        angle = (i * Math.PI) / spikes
+        radius = outer_radius if i % 2 == 0 else inner_radius
+        x = cx + radius * Math.cos(angle - Math.PI / 2)
+        y = cy + radius * Math.sin(angle - Math.PI / 2)
+        if i == 0:
+            ctx.moveTo(x, y)
+        else:
+            ctx.lineTo(x, y)
+    ctx.closePath()
+    ctx.fill()
+
+def clear():
+    &quot;&quot;&quot;Clear the canvas&quot;&quot;&quot;
+    ctx.clearRect(0, 0, 400, 300)
+</code></pre>
+<p>Use it to create drawings easily:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.mine.draw_helpers import draw_circle, draw_star, draw_rect&#10;&#10;# Draw a scene&#10;draw_rect(0, 200, 400, 100, &#34;#90EE90&#34;)  # Grass&#10;draw_circle(320, 60, 40, &#34;#FFD700&#34;)      # Sun&#10;draw_star(200, 150, 5, 50, 20, &#34;#FF6B6B&#34;) # Star&#10;"></div><div class="snippet-output"></div></div>
+<h2>Best Practices</h2>
+<h3>1. Use Descriptive Names</h3>
+<p>Give your module trifles clear, descriptive names:</p>
+<ul>
+<li>✅ <code>string_helpers</code>, <code>color_utils</code>, <code>physics_engine</code></li>
+<li>❌ <code>stuff</code>, <code>misc</code>, <code>utils123</code></li>
+</ul>
+<h3>2. Document Your Functions</h3>
+<p>Add docstrings to help users understand your code:</p>
+<pre><code class="language-python">def calculate_distance(x1, y1, x2, y2):
+    &quot;&quot;&quot;
+    Calculate distance between two points.
+
+    Args:
+        x1, y1: Coordinates of first point
+        x2, y2: Coordinates of second point
+
+    Returns:
+        Distance as a float
+    &quot;&quot;&quot;
+    return ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+</code></pre>
+<h3>3. Group Related Functions</h3>
+<p>Keep related functionality together in one module:</p>
+<pre><code class="language-python"># Good: math_utils.py
+def add(a, b): ...
+def subtract(a, b): ...
+def multiply(a, b): ...
+
+# Better organized than having separate trifles for each function
+</code></pre>
+<h3>4. Version Your Modules</h3>
+<p>If you make breaking changes, consider creating a new version:</p>
+<ul>
+<li><code>my_library_v1</code></li>
+<li><code>my_library_v2</code></li>
+</ul>
+<h2>Common Use Cases</h2>
+<h3>Game Utilities</h3>
+<pre><code class="language-python"># trifle: game_utils
+class Vector2:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def add(self, other):
+        return Vector2(self.x + other.x, self.y + other.y)
+
+    def magnitude(self):
+        return (self.x**2 + self.y**2)**0.5
+
+def check_collision(x1, y1, r1, x2, y2, r2):
+    &quot;&quot;&quot;Check if two circles collide&quot;&quot;&quot;
+    dist = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+    return dist &lt; (r1 + r2)
+</code></pre>
+<h3>Data Processing</h3>
+<pre><code class="language-python"># trifle: data_helpers
+def average(numbers):
+    &quot;&quot;&quot;Calculate average of a list&quot;&quot;&quot;
+    return sum(numbers) / len(numbers)
+
+def find_min_max(numbers):
+    &quot;&quot;&quot;Return tuple of (min, max)&quot;&quot;&quot;
+    return (min(numbers), max(numbers))
+
+def normalize(numbers):
+    &quot;&quot;&quot;Normalize numbers to 0-1 range&quot;&quot;&quot;
+    min_val, max_val = find_min_max(numbers)
+    range_val = max_val - min_val
+    return [(n - min_val) / range_val for n in numbers]
+</code></pre>
+<h3>Text Utilities</h3>
+<pre><code class="language-python"># trifle: text_utils
+def title_case(text):
+    &quot;&quot;&quot;Convert text to title case&quot;&quot;&quot;
+    return ' '.join(word.capitalize() for word in text.split())
+
+def reverse_words(text):
+    &quot;&quot;&quot;Reverse the order of words&quot;&quot;&quot;
+    return ' '.join(reversed(text.split()))
+
+def count_vowels(text):
+    &quot;&quot;&quot;Count vowels in text&quot;&quot;&quot;
+    return sum(1 for char in text.lower() if char in 'aeiou')
+</code></pre>
+<h2>Error Handling</h2>
+<p>If a trifle can't be found, you'll get an import error:</p>
+<pre><code class="language-python">try:
+    from trifling.mine.nonexistent import func
+except ImportError as e:
+    print(f&quot;Could not import: {e}&quot;)
+    print(&quot;Make sure the trifle exists in your collection&quot;)
+</code></pre>
+<h2>Next Steps</h2>
+<ul>
+<li>Create your own utility trifles</li>
+<li>Build a library of reusable functions</li>
+<li>Share trifles with others using the export feature</li>
+<li>Combine imports with <a href="/static/docs/turtle.html">Turtle Graphics</a> and <a href="/static/docs/canvas.html">Canvas API</a></li>
+</ul>
+<p>Happy coding!</p>
+
+            </article>
+        </main>
+    </div>
+
+    <script src="/js/terminal.js"></script>
+    <script type="module" src="/js/snippet-runner.js"></script>
+    <script>
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

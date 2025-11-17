@@ -6,9 +6,9 @@
     <title id="pageTitle">Trifling Editor</title>
 
     <!-- Ace Editor from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-python.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/theme-monokai.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/theme-monokai.min.js"></script>
 
     <style>
         * {
@@ -105,6 +105,61 @@
 
         .user-profile-link:hover {
             background: rgba(52, 152, 219, 0.1);
+        }
+
+        .help-btn {
+            background: transparent;
+            color: #3498db;
+            border: 1px solid #3498db;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .help-btn:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .help-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-top: 4px;
+            min-width: 200px;
+            z-index: 1000;
+        }
+
+        .help-dropdown.show {
+            display: block;
+        }
+
+        .help-dropdown a {
+            display: block;
+            padding: 10px 16px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .help-dropdown a:hover {
+            background: #f6f8fa;
+        }
+
+        .help-dropdown a:first-child {
+            border-radius: 4px 4px 0 0;
+        }
+
+        .help-dropdown a:last-child {
+            border-radius: 0 0 4px 4px;
         }
 
         .run-btn {
@@ -581,6 +636,16 @@
         <div class="header-right">
             <span id="savingIndicator" class="saving-indicator"></span>
             <a href="/" class="user-profile-link" id="userDisplayName">Loading...</a>
+            <div style="position: relative;">
+                <button id="helpBtn" class="help-btn">? Help</button>
+                <div id="helpDropdown" class="help-dropdown">
+                    <a href="/learn.html">📚 Learn Python</a>
+                    <a href="/static/docs/intro.html">🚀 Getting Started</a>
+                    <a href="/static/docs/turtle.html">🐢 Turtle Graphics</a>
+                    <a href="/static/docs/canvas.html">🎨 Canvas API</a>
+                    <a href="/static/docs/imports.html">🔗 Trifle Imports</a>
+                </div>
+            </div>
             <button id="runBtn" class="run-btn" disabled>Run</button>
         </div>
     </div>
@@ -642,6 +707,25 @@
 
     <script src="/js/terminal.js"></script>
     <script type="module" src="/js/editor.js"></script>
+    <script>
+        // Help dropdown toggle
+        const helpBtn = document.getElementById('helpBtn');
+        const helpDropdown = document.getElementById('helpDropdown');
+
+        helpBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            helpDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            helpDropdown.classList.remove('show');
+        });
+
+        helpDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
     <script>
         // Register service worker for offline support
         if ('serviceWorker' in navigator) {

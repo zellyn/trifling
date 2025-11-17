@@ -22,6 +22,7 @@ Local-first Python3 playground using Pyodide (WASM). All execution client-side. 
 ## Module Organization
 - `internal/auth/` - OAuth, sessions (email-based)
 - `internal/kv/` - File-based KV store for sync
+- `internal/docgen/` - Documentation generator (Goldmark → HTML)
 - `web/js/` - Core modules:
   - `app.js` - Homepage trifle list
   - `db.js` - IndexedDB abstraction (content-addressable)
@@ -33,6 +34,7 @@ Local-first Python3 playground using Pyodide (WASM). All execution client-side. 
   - `sync-kv.js` - Server sync logic
   - `namegen.js` - Random name generation
   - `notifications.js` - Dismissible banner notifications
+  - `snippet-runner.js` - Documentation runnable snippets
 - `web/sw.js` - Service worker (**bump version** when cache behavior changes)
 
 ## Service Worker
@@ -40,6 +42,10 @@ Local-first Python3 playground using Pyodide (WASM). All execution client-side. 
 - Query params: strips them for cache matching (e.g., `/editor.html?id=xyz` → `/editor.html`)
 - Never caches `/api/*` endpoints
 - Version format: `v{number}` - increment when changing cache logic
+- **Registration**: All HTML pages MUST include service worker registration script
+  - Required for hard refresh (Option-Command-R) to pick up new versions
+  - Already in: index.html, editor.html, profile.html, data.html, about.html, learn.html
+  - Auto-added to generated docs via `internal/docgen/generator.go` template
 - **IMPORTANT**: Bump `CACHE_VERSION` in `web/sw.js` whenever you modify:
   - Any JavaScript file in `web/js/`
   - Any HTML file in `web/`
@@ -119,6 +125,14 @@ export GOOGLE_CLIENT_ID="$(op read 'op://Shared/Trifle/Google OAuth Client ID')"
 export GOOGLE_CLIENT_SECRET="$(op read 'op://Shared/Trifle/Google OAuth Client Secret')"
 go run main.go  # → http://localhost:3000
 ```
+
+## Documentation System
+- **Location**: `/docs/*.md` (Markdown source)
+- **Build**: `go generate ./internal/docgen` → `/static/docs/*.html`
+- **Special blocks**: ` ```python-editor-text ` and ` ```python-editor-graphics `
+- **Features**: Inline runnable code with Ace editor + Pyodide
+- **Access**: `/learn.html` landing page, links in nav + editor help
+- See `DOCUMENTATION_SYSTEM.md` for full details
 
 ## Workflow
 Before committing: Use Task tool to launch code review agent.

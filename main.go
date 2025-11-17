@@ -20,6 +20,9 @@ import (
 //go:embed web
 var webFS embed.FS
 
+//go:embed static
+var staticFS embed.FS
+
 func main() {
 	// Set up structured logging
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
@@ -117,6 +120,14 @@ func main() {
 	// Serve static files from embedded web directory
 	mux.Handle("/css/", http.FileServer(http.FS(webContent)))
 	mux.Handle("/js/", http.FileServer(http.FS(webContent)))
+
+	// Serve documentation from embedded static directory
+	staticContent, err6 := fs.Sub(staticFS, "static")
+	if err6 != nil {
+		slog.Error("Failed to get static subdirectory", "error", err6)
+		os.Exit(1)
+	}
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticContent))))
 
 	// Create HTTP server with logging middleware
 	server := &http.Server{

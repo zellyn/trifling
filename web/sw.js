@@ -1,5 +1,5 @@
 // Trifling Service Worker - Enables offline functionality
-const CACHE_VERSION = 'v124';
+const CACHE_VERSION = 'v140';
 const CACHE_NAME = `trifling-${CACHE_VERSION}`;
 
 // Resources to cache on install
@@ -10,7 +10,9 @@ const STATIC_CACHE = [
     '/profile.html',
     '/data.html',
     '/about.html',
+    '/learn.html',
     '/css/app.css',
+    '/css/docs.css',
     '/js/app.js',
     '/js/editor.js',
     '/js/profile.js',
@@ -24,14 +26,19 @@ const STATIC_CACHE = [
     '/js/python-env.js',
     '/js/turtle.js',
     '/js/terminal.js',
-    '/js/sync-kv.js'
+    '/js/sync-kv.js',
+    '/js/snippet-runner.js',
+    '/static/docs/intro.html',
+    '/static/docs/turtle.html',
+    '/static/docs/canvas.html',
+    '/static/docs/imports.html'
 ];
 
 // CDN resources to cache (Ace Editor and Pyodide)
 const CDN_CACHE = [
-    'https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-python.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/theme-monokai.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-python.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/theme-monokai.min.js',
     'https://cdn.jsdelivr.net/pyodide/v0.28.3/full/pyodide.js',
     'https://cdn.jsdelivr.net/pyodide/v0.28.3/full/pyodide.asm.js',
     'https://cdn.jsdelivr.net/pyodide/v0.28.3/full/pyodide.asm.wasm',

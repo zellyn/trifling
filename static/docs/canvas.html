@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas API - Trifling Documentation</title>
+    <meta name="description" content="Draw shapes and graphics with the canvas API">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+    <header class="app-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">Trifling</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/learn.html" class="active">Learn</a>
+                <a href="/about.html">About</a>
+            </div>
+            <div class="nav-auth" id="nav-auth"></div>
+        </nav>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <h2>Documentation</h2>
+            <nav class="docs-nav">
+                <div class="docs-category">
+                    <h3>Getting Started</h3>
+                    <a href="/static/docs/intro.html">Introduction</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Graphics</h3>
+                    <a href="/static/docs/turtle.html">Turtle Graphics</a>
+                    <a href="/static/docs/canvas.html">Canvas API</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Advanced</h3>
+                    <a href="/static/docs/imports.html">Trifle Imports</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="docs-content">
+            <article class="doc-article">
+                <h1>Canvas API</h1>
+<p>The canvas API gives you direct control over drawing. It's perfect for creating custom graphics, games, and visualizations.</p>
+<h2>Basic Setup</h2>
+<p>Access the canvas through the <code>trifling.canvas</code> module:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx&#10;&#10;# Draw a rectangle&#10;ctx.fillStyle = &#34;#FF6B6B&#34;&#10;ctx.fillRect(50, 50, 100, 80)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Drawing Shapes</h2>
+<h3>Rectangles</h3>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx&#10;&#10;# Filled rectangle&#10;ctx.fillStyle = &#34;#4ECDC4&#34;&#10;ctx.fillRect(20, 20, 100, 60)&#10;&#10;# Outlined rectangle&#10;ctx.strokeStyle = &#34;#1A535C&#34;&#10;ctx.lineWidth = 3&#10;ctx.strokeRect(150, 20, 100, 60)&#10;"></div><div class="snippet-output"></div></div>
+<h3>Lines and Paths</h3>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx&#10;&#10;ctx.strokeStyle = &#34;#FF6B6B&#34;&#10;ctx.lineWidth = 2&#10;&#10;# Draw a triangle&#10;ctx.beginPath()&#10;ctx.moveTo(100, 50)&#10;ctx.lineTo(150, 150)&#10;ctx.lineTo(50, 150)&#10;ctx.closePath()&#10;ctx.stroke()&#10;"></div><div class="snippet-output"></div></div>
+<h3>Circles and Arcs</h3>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx, Math&#10;&#10;# Draw a circle&#10;ctx.fillStyle = &#34;#FFE66D&#34;&#10;ctx.beginPath()&#10;ctx.arc(100, 100, 50, 0, 2 * Math.PI)&#10;ctx.fill()&#10;&#10;# Draw an outlined circle&#10;ctx.strokeStyle = &#34;#4ECDC4&#34;&#10;ctx.lineWidth = 3&#10;ctx.beginPath()&#10;ctx.arc(250, 100, 50, 0, 2 * Math.PI)&#10;ctx.stroke()&#10;"></div><div class="snippet-output"></div></div>
+<h2>Colors and Styles</h2>
+<h3>RGB and Hex Colors</h3>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx&#10;&#10;# Hex colors&#10;ctx.fillStyle = &#34;#FF6B6B&#34;&#10;ctx.fillRect(20, 20, 60, 60)&#10;&#10;# RGB colors&#10;ctx.fillStyle = &#34;rgb(78, 205, 196)&#34;&#10;ctx.fillRect(100, 20, 60, 60)&#10;&#10;# RGBA (with transparency)&#10;ctx.fillStyle = &#34;rgba(255, 230, 109, 0.5)&#34;&#10;ctx.fillRect(180, 20, 60, 60)&#10;"></div><div class="snippet-output"></div></div>
+<h3>Filled and Stroked Shapes</h3>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx, Math&#10;&#10;# Filled circle&#10;ctx.fillStyle = &#34;#FF6B6B&#34;&#10;ctx.beginPath()&#10;ctx.arc(80, 80, 40, 0, 2 * Math.PI)&#10;ctx.fill()&#10;&#10;# Stroked circle&#10;ctx.strokeStyle = &#34;#4ECDC4&#34;&#10;ctx.lineWidth = 4&#10;ctx.beginPath()&#10;ctx.arc(200, 80, 40, 0, 2 * Math.PI)&#10;ctx.stroke()&#10;&#10;# Both filled and stroked&#10;ctx.fillStyle = &#34;#FFE66D&#34;&#10;ctx.strokeStyle = &#34;#1A535C&#34;&#10;ctx.lineWidth = 3&#10;ctx.beginPath()&#10;ctx.arc(320, 80, 40, 0, 2 * Math.PI)&#10;ctx.fill()&#10;ctx.stroke()&#10;"></div><div class="snippet-output"></div></div>
+<h2>Patterns and Designs</h2>
+<h3>Grid Pattern</h3>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx&#10;&#10;# Draw a grid&#10;ctx.strokeStyle = &#34;#E0E0E0&#34;&#10;ctx.lineWidth = 1&#10;&#10;# Vertical lines&#10;for x in range(0, 400, 20):&#10;    ctx.beginPath()&#10;    ctx.moveTo(x, 0)&#10;    ctx.lineTo(x, 300)&#10;    ctx.stroke()&#10;&#10;# Horizontal lines&#10;for y in range(0, 300, 20):&#10;    ctx.beginPath()&#10;    ctx.moveTo(0, y)&#10;    ctx.lineTo(400, y)&#10;    ctx.stroke()&#10;"></div><div class="snippet-output"></div></div>
+<h3>Concentric Circles</h3>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx, Math&#10;&#10;colors = [&#34;#FF6B6B&#34;, &#34;#FFA500&#34;, &#34;#FFE66D&#34;, &#34;#4ECDC4&#34;, &#34;#45B7D1&#34;]&#10;&#10;for i in range(5):&#10;    ctx.strokeStyle = colors[i]&#10;    ctx.lineWidth = 3&#10;    ctx.beginPath()&#10;    radius = 100 - (i * 18)&#10;    ctx.arc(200, 150, radius, 0, 2 * Math.PI)&#10;    ctx.stroke()&#10;"></div><div class="snippet-output"></div></div>
+<h3>Checkerboard</h3>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx&#10;&#10;size = 40&#10;colors = [&#34;#1A535C&#34;, &#34;#4ECDC4&#34;]&#10;&#10;for row in range(8):&#10;    for col in range(8):&#10;        color_index = (row + col) % 2&#10;        ctx.fillStyle = colors[color_index]&#10;        ctx.fillRect(col * size, row * size, size, size)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Animation Basics</h2>
+<p>Create simple animations by clearing and redrawing:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx, Math&#10;import time&#10;&#10;# Clear canvas&#10;ctx.fillStyle = &#34;white&#34;&#10;ctx.fillRect(0, 0, 400, 300)&#10;&#10;# Animate a ball moving across the screen&#10;for i in range(20):&#10;    # Clear previous frame&#10;    ctx.clearRect(0, 0, 400, 300)&#10;&#10;    # Draw ball at new position&#10;    x = 20 + i * 18&#10;    y = 150&#10;&#10;    ctx.fillStyle = &#34;#FF6B6B&#34;&#10;    ctx.beginPath()&#10;    ctx.arc(x, y, 15, 0, 2 * Math.PI)&#10;    ctx.fill()&#10;&#10;    time.sleep(0.05)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Complex Shapes</h2>
+<h3>Star</h3>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx, Math&#10;&#10;def draw_star(cx, cy, spikes, outer_radius, inner_radius):&#10;    ctx.beginPath()&#10;    for i in range(spikes * 2):&#10;        angle = (i * Math.PI) / spikes&#10;        radius = outer_radius if i % 2 == 0 else inner_radius&#10;        x = cx + radius * Math.cos(angle - Math.PI / 2)&#10;        y = cy + radius * Math.sin(angle - Math.PI / 2)&#10;        if i == 0:&#10;            ctx.moveTo(x, y)&#10;        else:&#10;            ctx.lineTo(x, y)&#10;    ctx.closePath()&#10;&#10;# Draw a yellow star&#10;ctx.fillStyle = &#34;#FFE66D&#34;&#10;ctx.strokeStyle = &#34;#FFA500&#34;&#10;ctx.lineWidth = 2&#10;draw_star(200, 150, 5, 80, 35)&#10;ctx.fill()&#10;ctx.stroke()&#10;"></div><div class="snippet-output"></div></div>
+<h2>Canvas Methods Reference</h2>
+<h3>Drawing Rectangles</h3>
+<ul>
+<li><code>fillRect(x, y, width, height)</code> - Draw filled rectangle</li>
+<li><code>strokeRect(x, y, width, height)</code> - Draw outlined rectangle</li>
+<li><code>clearRect(x, y, width, height)</code> - Clear rectangle area</li>
+</ul>
+<h3>Drawing Paths</h3>
+<ul>
+<li><code>beginPath()</code> - Start a new path</li>
+<li><code>closePath()</code> - Close the current path</li>
+<li><code>moveTo(x, y)</code> - Move to position without drawing</li>
+<li><code>lineTo(x, y)</code> - Draw line to position</li>
+<li><code>arc(x, y, radius, startAngle, endAngle)</code> - Draw arc/circle</li>
+<li><code>fill()</code> - Fill the current path</li>
+<li><code>stroke()</code> - Stroke the current path</li>
+</ul>
+<h3>Styles</h3>
+<ul>
+<li><code>fillStyle</code> - Color for filling (hex, rgb, rgba)</li>
+<li><code>strokeStyle</code> - Color for stroking</li>
+<li><code>lineWidth</code> - Width of lines</li>
+</ul>
+<h2>Try Your Own!</h2>
+<p>Create a custom design:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="from trifling.canvas import ctx, Math&#10;&#10;# Your creative code here!&#10;# Try combining shapes, colors, and patterns&#10;&#10;# Example: Simple house&#10;ctx.fillStyle = &#34;#8B4513&#34;&#10;ctx.fillRect(100, 150, 200, 120)  # House body&#10;&#10;ctx.fillStyle = &#34;#FF6B6B&#34;&#10;ctx.beginPath()  # Roof&#10;ctx.moveTo(90, 150)&#10;ctx.lineTo(200, 80)&#10;ctx.lineTo(310, 150)&#10;ctx.closePath()&#10;ctx.fill()&#10;&#10;ctx.fillStyle = &#34;#4ECDC4&#34;&#10;ctx.fillRect(150, 200, 50, 70)  # Door&#10;"></div><div class="snippet-output"></div></div>
+<h2>Next Steps</h2>
+<ul>
+<li>Combine canvas with turtle graphics</li>
+<li>Create interactive visualizations</li>
+<li>Build simple games</li>
+<li>Check out <a href="/static/docs/imports.html">Trifle Imports</a> to share canvas utilities</li>
+</ul>
+
+            </article>
+        </main>
+    </div>
+
+    <script src="/js/terminal.js"></script>
+    <script type="module" src="/js/snippet-runner.js"></script>
+    <script>
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

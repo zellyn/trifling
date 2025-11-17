@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Python - Trifling Documentation</title>
+    <meta name="description" content="Learn Python basics with interactive examples">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+    <header class="app-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">Trifling</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/learn.html" class="active">Learn</a>
+                <a href="/about.html">About</a>
+            </div>
+            <div class="nav-auth" id="nav-auth"></div>
+        </nav>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <h2>Documentation</h2>
+            <nav class="docs-nav">
+                <div class="docs-category">
+                    <h3>Getting Started</h3>
+                    <a href="/static/docs/intro.html">Introduction</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Graphics</h3>
+                    <a href="/static/docs/turtle.html">Turtle Graphics</a>
+                    <a href="/static/docs/canvas.html">Canvas API</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Advanced</h3>
+                    <a href="/static/docs/imports.html">Trifle Imports</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="docs-content">
+            <article class="doc-article">
+                <h1>Introduction to Python</h1>
+<p>Welcome to Trifling! This interactive tutorial will teach you Python programming right in your browser. No installation required.</p>
+<h2>Your First Program</h2>
+<p>Let's start with the classic &quot;Hello, World!&quot; program:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="print(&#34;Hello, World!&#34;)&#10;"></div><div class="snippet-output"></div></div>
+<p>Click the <strong>Run</strong> button to execute the code. You can edit the code and run it again!</p>
+<h2>Variables and Data Types</h2>
+<p>Python makes it easy to work with different types of data:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="# Numbers&#10;age = 25&#10;price = 19.99&#10;&#10;# Strings&#10;name = &#34;Alice&#34;&#10;message = &#39;Hello, Python!&#39;&#10;&#10;# Booleans&#10;is_student = True&#10;has_license = False&#10;&#10;print(f&#34;{name} is {age} years old&#34;)&#10;print(f&#34;Student status: {is_student}&#34;)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Loops</h2>
+<p>Loops let you repeat actions:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="# For loop&#10;for i in range(5):&#10;    print(f&#34;Count: {i}&#34;)&#10;&#10;print()  # Empty line&#10;&#10;# While loop&#10;count = 0&#10;while count &lt; 3:&#10;    print(f&#34;While loop: {count}&#34;)&#10;    count += 1&#10;"></div><div class="snippet-output"></div></div>
+<h2>Lists</h2>
+<p>Lists store multiple values:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="# Create a list&#10;fruits = [&#34;apple&#34;, &#34;banana&#34;, &#34;cherry&#34;]&#10;&#10;# Access items&#10;print(f&#34;First fruit: {fruits[0]}&#34;)&#10;&#10;# Add items&#10;fruits.append(&#34;orange&#34;)&#10;&#10;# Loop through list&#10;print(&#34;\nAll fruits:&#34;)&#10;for fruit in fruits:&#10;    print(f&#34;  - {fruit}&#34;)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Functions</h2>
+<p>Functions help you organize code:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="def greet(name):&#10;    return f&#34;Hello, {name}!&#34;&#10;&#10;def add(a, b):&#10;    return a + b&#10;&#10;# Call functions&#10;print(greet(&#34;World&#34;))&#10;print(f&#34;5 + 3 = {add(5, 3)}&#34;)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Conditionals</h2>
+<p>Make decisions in your code:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="def check_age(age):&#10;    if age &lt; 13:&#10;        return &#34;You&#39;re a child&#34;&#10;    elif age &lt; 20:&#10;        return &#34;You&#39;re a teenager&#34;&#10;    else:&#10;        return &#34;You&#39;re an adult&#34;&#10;&#10;print(check_age(10))&#10;print(check_age(16))&#10;print(check_age(25))&#10;"></div><div class="snippet-output"></div></div>
+<h2>Interactive Input</h2>
+<p>Try using <code>input()</code> to get user input:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="name = input(&#34;What&#39;s your name? &#34;)&#10;print(f&#34;Nice to meet you, {name}!&#34;)&#10;&#10;age = input(&#34;How old are you? &#34;)&#10;print(f&#34;Wow, {age} years old!&#34;)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Try It Yourself</h2>
+<p>Create a simple program that asks for a number and prints its square:</p>
+<div class="runnable-snippet" data-mode="text"><div class="snippet-header"><span class="snippet-label">▶ Interactive Python</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="# Your code here&#10;number = input(&#34;Enter a number: &#34;)&#10;square = int(number) ** 2&#10;print(f&#34;The square of {number} is {square}&#34;)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Next Steps</h2>
+<p>Now that you know the basics, try these tutorials:</p>
+<ul>
+<li><a href="/static/docs/turtle.html">Turtle Graphics</a> - Create drawings and animations</li>
+<li><a href="/static/docs/canvas.html">Canvas API</a> - Draw shapes and images directly</li>
+<li><a href="/static/docs/imports.html">Trifle Imports</a> - Share code between projects</li>
+</ul>
+<p>Remember: You can turn any example into a trifle by clicking <strong>Make Trifle</strong>!</p>
+
+            </article>
+        </main>
+    </div>
+
+    <script src="/js/terminal.js"></script>
+    <script type="module" src="/js/snippet-runner.js"></script>
+    <script>
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

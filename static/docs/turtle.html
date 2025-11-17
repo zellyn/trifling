@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turtle Graphics - Trifling Documentation</title>
+    <meta name="description" content="Create beautiful drawings with turtle graphics">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/docs.css">
+</head>
+<body>
+    <header class="app-header">
+        <nav class="nav-container">
+            <a href="/" class="logo">Trifling</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/learn.html" class="active">Learn</a>
+                <a href="/about.html">About</a>
+            </div>
+            <div class="nav-auth" id="nav-auth"></div>
+        </nav>
+    </header>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar">
+            <h2>Documentation</h2>
+            <nav class="docs-nav">
+                <div class="docs-category">
+                    <h3>Getting Started</h3>
+                    <a href="/static/docs/intro.html">Introduction</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Graphics</h3>
+                    <a href="/static/docs/turtle.html">Turtle Graphics</a>
+                    <a href="/static/docs/canvas.html">Canvas API</a>
+                </div>
+                <div class="docs-category">
+                    <h3>Advanced</h3>
+                    <a href="/static/docs/imports.html">Trifle Imports</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="docs-content">
+            <article class="doc-article">
+                <h1>Turtle Graphics</h1>
+<p>Turtle graphics is a fun way to create drawings using Python. Imagine a turtle with a pen that moves around the canvas, drawing as it goes!</p>
+<h2>Basic Movement</h2>
+<p>The turtle starts at the center (0, 0) facing right:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="import turtle&#10;&#10;# Move forward&#10;turtle.forward(100)&#10;&#10;# Turn and move again&#10;turtle.left(90)&#10;turtle.forward(100)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Drawing a Square</h2>
+<p>Let's draw a complete square:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="import turtle&#10;&#10;for i in range(4):&#10;    turtle.forward(100)&#10;    turtle.right(90)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Colors and Pen</h2>
+<p>Make your drawings colorful:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="import turtle&#10;&#10;turtle.pencolor(&#34;red&#34;)&#10;turtle.pensize(3)&#10;turtle.forward(100)&#10;&#10;turtle.pencolor(&#34;blue&#34;)&#10;turtle.left(90)&#10;turtle.forward(100)&#10;&#10;turtle.pencolor(&#34;green&#34;)&#10;turtle.left(90)&#10;turtle.forward(100)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Filled Shapes</h2>
+<p>Fill shapes with color:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="import turtle&#10;&#10;turtle.fillcolor(&#34;yellow&#34;)&#10;turtle.begin_fill()&#10;&#10;for i in range(4):&#10;    turtle.forward(100)&#10;    turtle.right(90)&#10;&#10;turtle.end_fill()&#10;"></div><div class="snippet-output"></div></div>
+<h2>Drawing Circles</h2>
+<p>Circles are easy with turtle:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="import turtle&#10;&#10;# Draw a circle&#10;turtle.circle(50)&#10;&#10;# Move and draw another&#10;turtle.penup()&#10;turtle.goto(0, -100)&#10;turtle.pendown()&#10;&#10;turtle.fillcolor(&#34;lightblue&#34;)&#10;turtle.begin_fill()&#10;turtle.circle(50)&#10;turtle.end_fill()&#10;"></div><div class="snippet-output"></div></div>
+<h2>Spirals</h2>
+<p>Create mesmerizing spirals:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="import turtle&#10;&#10;turtle.speed(0)  # Fastest speed&#10;turtle.bgcolor(&#34;black&#34;)&#10;turtle.pencolor(&#34;cyan&#34;)&#10;&#10;for i in range(100):&#10;    turtle.forward(i * 2)&#10;    turtle.right(91)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Rainbow Star</h2>
+<p>Combine colors and shapes:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="import turtle&#10;&#10;turtle.speed(0)&#10;turtle.bgcolor(&#34;black&#34;)&#10;&#10;colors = [&#34;red&#34;, &#34;orange&#34;, &#34;yellow&#34;, &#34;green&#34;, &#34;blue&#34;, &#34;purple&#34;]&#10;&#10;for i in range(36):&#10;    turtle.pencolor(colors[i % len(colors)])&#10;    turtle.forward(100)&#10;    turtle.right(170)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Flower Pattern</h2>
+<p>Create a beautiful flower:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="import turtle&#10;&#10;turtle.speed(0)&#10;turtle.bgcolor(&#34;lightgreen&#34;)&#10;turtle.pencolor(&#34;purple&#34;)&#10;turtle.fillcolor(&#34;pink&#34;)&#10;&#10;for i in range(12):&#10;    turtle.begin_fill()&#10;    turtle.circle(50)&#10;    turtle.end_fill()&#10;    turtle.right(30)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Useful Commands</h2>
+<p>Here are common turtle commands:</p>
+<ul>
+<li><code>forward(distance)</code> - Move forward</li>
+<li><code>backward(distance)</code> - Move backward</li>
+<li><code>right(angle)</code> - Turn right (degrees)</li>
+<li><code>left(angle)</code> - Turn left (degrees)</li>
+<li><code>goto(x, y)</code> - Move to position</li>
+<li><code>setheading(angle)</code> - Set direction</li>
+<li><code>penup()</code> - Stop drawing</li>
+<li><code>pendown()</code> - Start drawing</li>
+<li><code>pencolor(color)</code> - Set pen color</li>
+<li><code>fillcolor(color)</code> - Set fill color</li>
+<li><code>pensize(width)</code> - Set pen width</li>
+<li><code>circle(radius)</code> - Draw a circle</li>
+<li><code>speed(value)</code> - Set speed (0-10, 0 is fastest)</li>
+<li><code>bgcolor(color)</code> - Set background color</li>
+<li><code>clear()</code> - Clear the drawing</li>
+<li><code>reset()</code> - Clear and reset position</li>
+</ul>
+<h2>Try Your Own!</h2>
+<p>Create your own design. Here's a starter:</p>
+<div class="runnable-snippet" data-mode="graphics"><div class="snippet-header"><span class="snippet-label">🐢 Interactive Graphics</span><div class="snippet-controls"><button class="copy-btn" title="Copy code" aria-label="Copy code to clipboard">📋</button><button class="run-btn" title="Run code" aria-label="Run Python code">▶ Run</button><button class="make-trifle-btn" title="Save as trifle" aria-label="Save code as new trifle">💾 Make Trifle</button></div></div><div class="snippet-code" data-code="import turtle&#10;&#10;turtle.speed(0)&#10;&#10;# Your creative code here!&#10;for i in range(8):&#10;    turtle.circle(50)&#10;    turtle.right(45)&#10;"></div><div class="snippet-output"></div></div>
+<h2>Next Steps</h2>
+<ul>
+<li>Experiment with different shapes and colors</li>
+<li>Try combining multiple patterns</li>
+<li>Create animations by clearing and redrawing</li>
+<li>Check out the <a href="/static/docs/canvas.html">Canvas API</a> for more drawing options</li>
+</ul>
+
+            </article>
+        </main>
+    </div>
+
+    <script src="/js/terminal.js"></script>
+    <script type="module" src="/js/snippet-runner.js"></script>
+    <script>
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>
