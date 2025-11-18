@@ -302,6 +302,11 @@ class CodeSnippet {
                     this.turtles['turtle_0'] = this.turtleAPI.defaultTurtle;
                 }
                 break;
+            case 'turtle-bgcolor':
+                if (this.turtleAPI) {
+                    this.turtleAPI.screen.bgcolor(data.color);
+                }
+                break;
             case 'complete':
                 this.isRunning = false;
                 this.runBtn.textContent = '▶ Run';

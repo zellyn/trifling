@@ -737,10 +737,22 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
 
         end_fill() {
             if (this._filling && this._fillPath) {
-                const paper = this.getPaper();
-                paper.fillStyle = this._fill;
-                paper.fill(this._fillPath);
+                // Capture the fill color at queue time
+                const fillColor = this._fill;
+                // Keep reference to current path (don't null it yet - queued frames still need it)
+                const fillPath = this._fillPath;
+
+                // Turn off filling flag immediately so new movements don't add to path
                 this._filling = false;
+
+                // Queue the fill operation as a frame
+                frameManager.addFrame(() => {
+                    const paper = this.getPaper();
+                    paper.fillStyle = fillColor;
+                    paper.fill(fillPath);
+                }, false); // Don't count as animation frame
+
+                // Now we can null the path for next begin_fill()
                 this._fillPath = null;
             }
         }

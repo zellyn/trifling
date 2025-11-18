@@ -763,6 +763,11 @@ async function handleWorkerMessage(e) {
             scaleCanvasesToFit();
             break;
 
+        case 'turtle-bgcolor':
+            state.turtleAPI.screen.bgcolor(data.color);
+            markCanvasUsed();
+            break;
+
         case 'files-loaded':
             // Worker has loaded files into its filesystem
             break;

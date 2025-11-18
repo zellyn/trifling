@@ -440,9 +440,17 @@ class Turtle:
     
     def delay(self, delay):
         pass  # No-op for now
-    
+
     def speed(self, speed):
-        pass  # No-op for now
+        workerSend('turtle-method', {'id': self._id, 'method': 'speed', 'args': [speed]})
+
+    def circle(self, radius, extent=None, steps=None):
+        args = [radius]
+        if extent is not None:
+            args.append(extent)
+            if steps is not None:
+                args.append(steps)
+        workerSend('turtle-method', {'id': self._id, 'method': 'circle', 'args': args})
 
     def shape(self, name=None):
         if name is None:
@@ -581,6 +589,12 @@ def clear():
 def reset():
     workerSend('turtle-reset', {})
 
+def speed(speed):
+    _default_turtle.speed(speed)
+
+def circle(radius, extent=None, steps=None):
+    _default_turtle.circle(radius, extent, steps)
+
 def shape(name=None):
     return _default_turtle.shape(name)
 
@@ -603,8 +617,9 @@ class Screen:
         workerSend('turtle-setup', {'width': width, 'height': height})
 
     def bgcolor(self, color=None):
-        # TODO: implement background color
-        pass
+        if color is not None:
+            workerSend('turtle-bgcolor', {'color': color})
+        return None  # Getter not implemented
 
     def clear(self):
         clear()
@@ -616,6 +631,11 @@ class Screen:
 def setup(width=600, height=400, startx=None, starty=None):
     """Set canvas size. startx/starty are ignored (web-based)."""
     workerSend('turtle-setup', {'width': width, 'height': height})
+
+def bgcolor(color=None):
+    """Set the background color of the canvas."""
+    if color is not None:
+        workerSend('turtle-bgcolor', {'color': color})
 
 # Register turtle module
 sys.modules['turtle'] = sys.modules[__name__]
