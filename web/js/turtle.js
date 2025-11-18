@@ -349,6 +349,8 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
             const startX = this._x;
             const startY = this._y;
             const radians = this._radians;
+            const color = this._color;
+            const size = this._size;
             const dx = Math.cos(radians) * distance;
             const dy = Math.sin(radians) * distance;
 
@@ -384,8 +386,8 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
                             paper.beginPath();
                             paper.moveTo(prevX, prevY);  // Use captured start position
                         }
-                        paper.lineWidth = this._size * this.screen.lineScale;
-                        paper.strokeStyle = this._color;
+                        paper.lineWidth = size * this.screen.lineScale;
+                        paper.strokeStyle = color;
                         paper.lineTo(newX, newY);
                         paper.stroke();
                     }
@@ -453,6 +455,8 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
             // Capture current state at queue time
             const startX = this._x;
             const startY = this._y;
+            const color = this._color;
+            const size = this._size;
             const dx = x - startX;
             const dy = y - startY;
             const distance = Math.sqrt(dx * dx + dy * dy);
@@ -483,8 +487,8 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
                             paper.beginPath();
                             paper.moveTo(prevX, prevY);  // Use captured position
                         }
-                        paper.lineWidth = this._size * this.screen.lineScale;
-                        paper.strokeStyle = this._color;
+                        paper.lineWidth = size * this.screen.lineScale;
+                        paper.strokeStyle = color;
                         paper.lineTo(newX, newY);
                         paper.stroke();
                     }
@@ -523,6 +527,112 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
             this.setheading(0);
         }
 
+        circle(radius, extent = null, steps = null) {
+            // Default extent is full circle
+            if (extent === null) {
+                extent = this._fullCircle;
+            }
+
+            // Calculate number of steps for smooth circle
+            if (steps === null) {
+                const scale = 1 / this.screen.lineScale;
+                const frac = Math.abs(extent) / this._fullCircle;
+                steps = 1 + Math.floor(Math.min(11 + Math.abs(radius * scale) / 6, 59) * frac);
+            }
+
+            // Calculate per-step values
+            const w = extent / steps;  // angle change per step
+            const w2 = 0.5 * w;        // half angle for rotation
+            let l = 2 * radius * Math.sin((w * Math.PI) / this._fullCircle);  // chord length
+
+            // Handle negative radius (draws to the right instead of left)
+            let angleIncrement = w;
+            if (radius < 0) {
+                l = -l;
+                angleIncrement = -w;
+            }
+
+            // Capture starting state
+            const startX = this._x;
+            const startY = this._y;
+            const startAngle = this._angle;
+            const color = this._color;
+            const size = this._size;
+
+            // Rotate by half angle to start
+            let currentAngle = startAngle + w2;
+            let currentX = startX;
+            let currentY = startY;
+
+            // Draw circle as series of line segments
+            for (let i = 0; i < steps; i++) {
+                const headingAngle = currentAngle + angleIncrement * i;
+                const headingRadians = (headingAngle * Math.PI) / 180;
+                const dx = Math.cos(headingRadians) * l;
+                const dy = Math.sin(headingRadians) * l;
+                const nextX = currentX + dx;
+                const nextY = currentY + dy;
+
+                // Capture values in closure
+                const angle = headingAngle;
+                const radians = headingRadians;
+                const toX = nextX;
+                const toY = nextY;
+                const fromX = currentX;
+                const fromY = currentY;
+                const isFirst = (i === 0);
+
+                // Queue rotation frame
+                frameManager.addFrame(() => {
+                    this._angle = angle;
+                    this._radians = radians;
+                }, true);
+
+                // Queue movement frame with fill support
+                if (this._filling) {
+                    frameManager.addFrame(() => {
+                        if (this._fillPath) {
+                            this._fillPath.lineTo(toX, toY);
+                        }
+                    }, false);
+                }
+
+                frameManager.addFrame(() => {
+                    if (this._down) {
+                        const paper = this.getPaper();
+                        if (isFirst) {
+                            paper.beginPath();
+                            paper.moveTo(fromX, fromY);
+                        }
+                        paper.lineWidth = size * this.screen.lineScale;
+                        paper.strokeStyle = color;
+                        paper.lineTo(toX, toY);
+                        paper.stroke();
+                    }
+                    this._x = toX;
+                    this._y = toY;
+                }, true);
+
+                currentX = nextX;
+                currentY = nextY;
+            }
+
+            // Final heading update
+            const endAngle = radius < 0 ? startAngle - extent : startAngle + extent;
+            const endRadians = (endAngle * Math.PI) / 180;
+
+            frameManager.addFrame(() => {
+                this._angle = endAngle;
+                this._radians = endRadians;
+            }, true);
+
+            // Update position and angle IMMEDIATELY (like Skulpt)
+            this._x = currentX;
+            this._y = currentY;
+            this._angle = endAngle;
+            this._radians = endRadians;
+        }
+
         // Position queries
         position() {
             return [this._x, this._y];
@@ -558,6 +668,34 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
                 this._size = size;
             }
             return this._size;
+        }
+
+        speed(speed = null) {
+            if (speed === null) {
+                return this._speed;
+            }
+
+            // Support string speed names like Skulpt
+            const speeds = {"fastest": 0, "fast": 10, "normal": 6, "slow": 3, "slowest": 1};
+            if (typeof speed === "string" && speed in speeds) {
+                speed = speeds[speed];
+            }
+
+            // Validate speed is a number
+            if (typeof speed !== "number") {
+                throw new Error("speed expected a string or number");
+            }
+
+            // Round speeds between 0.5 and 10.5, otherwise set to 0 (instant)
+            if (speed > 0.5 && speed < 10.5) {
+                speed = Math.round(speed);
+            } else {
+                speed = 0;
+            }
+
+            this._speed = speed;
+            this._computed_speed = speed * 2;  // Internal animation speed
+            return this._speed;
         }
 
         pencolor(...args) {
