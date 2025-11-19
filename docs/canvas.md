@@ -58,19 +58,20 @@ ctx.stroke()
 ### Circles and Arcs
 
 ```python-editor-graphics
-from trifling.canvas import ctx, Math
+from trifling.canvas import ctx
+import math
 
 # Draw a circle
 ctx.fillStyle = "#FFE66D"
 ctx.beginPath()
-ctx.arc(100, 100, 50, 0, 2 * Math.PI)
+ctx.arc(100, 100, 50, 0, 2 * math.pi)
 ctx.fill()
 
 # Draw an outlined circle
 ctx.strokeStyle = "#4ECDC4"
 ctx.lineWidth = 3
 ctx.beginPath()
-ctx.arc(250, 100, 50, 0, 2 * Math.PI)
+ctx.arc(250, 100, 50, 0, 2 * math.pi)
 ctx.stroke()
 ```
 
@@ -97,19 +98,20 @@ ctx.fillRect(180, 20, 60, 60)
 ### Filled and Stroked Shapes
 
 ```python-editor-graphics
-from trifling.canvas import ctx, Math
+from trifling.canvas import ctx
+import math
 
 # Filled circle
 ctx.fillStyle = "#FF6B6B"
 ctx.beginPath()
-ctx.arc(80, 80, 40, 0, 2 * Math.PI)
+ctx.arc(80, 80, 40, 0, 2 * math.pi)
 ctx.fill()
 
 # Stroked circle
 ctx.strokeStyle = "#4ECDC4"
 ctx.lineWidth = 4
 ctx.beginPath()
-ctx.arc(200, 80, 40, 0, 2 * Math.PI)
+ctx.arc(200, 80, 40, 0, 2 * math.pi)
 ctx.stroke()
 
 # Both filled and stroked
@@ -117,7 +119,7 @@ ctx.fillStyle = "#FFE66D"
 ctx.strokeStyle = "#1A535C"
 ctx.lineWidth = 3
 ctx.beginPath()
-ctx.arc(320, 80, 40, 0, 2 * Math.PI)
+ctx.arc(320, 80, 40, 0, 2 * math.pi)
 ctx.fill()
 ctx.stroke()
 ```
@@ -151,7 +153,8 @@ for y in range(0, 300, 20):
 ### Concentric Circles
 
 ```python-editor-graphics
-from trifling.canvas import ctx, Math
+from trifling.canvas import ctx
+import math
 
 colors = ["#FF6B6B", "#FFA500", "#FFE66D", "#4ECDC4", "#45B7D1"]
 
@@ -160,7 +163,7 @@ for i in range(5):
     ctx.lineWidth = 3
     ctx.beginPath()
     radius = 100 - (i * 18)
-    ctx.arc(200, 150, radius, 0, 2 * Math.PI)
+    ctx.arc(200, 150, radius, 0, 2 * math.pi)
     ctx.stroke()
 ```
 
@@ -184,7 +187,8 @@ for row in range(8):
 Create simple animations by clearing and redrawing:
 
 ```python-editor-graphics
-from trifling.canvas import ctx, Math
+from trifling.canvas import ctx
+import math
 import time
 
 # Clear canvas
@@ -202,7 +206,7 @@ for i in range(20):
 
     ctx.fillStyle = "#FF6B6B"
     ctx.beginPath()
-    ctx.arc(x, y, 15, 0, 2 * Math.PI)
+    ctx.arc(x, y, 15, 0, 2 * math.pi)
     ctx.fill()
 
     time.sleep(0.05)
@@ -213,15 +217,16 @@ for i in range(20):
 ### Star
 
 ```python-editor-graphics
-from trifling.canvas import ctx, Math
+from trifling.canvas import ctx
+import math
 
 def draw_star(cx, cy, spikes, outer_radius, inner_radius):
     ctx.beginPath()
     for i in range(spikes * 2):
-        angle = (i * Math.PI) / spikes
+        angle = (i * math.pi) / spikes
         radius = outer_radius if i % 2 == 0 else inner_radius
-        x = cx + radius * Math.cos(angle - Math.PI / 2)
-        y = cy + radius * Math.sin(angle - Math.PI / 2)
+        x = cx + radius * math.cos(angle - math.pi / 2)
+        y = cy + radius * math.sin(angle - math.pi / 2)
         if i == 0:
             ctx.moveTo(x, y)
         else:
@@ -263,7 +268,7 @@ ctx.stroke()
 Create a custom design:
 
 ```python-editor-graphics
-from trifling.canvas import ctx, Math
+from trifling.canvas import ctx
 
 # Your creative code here!
 # Try combining shapes, colors, and patterns

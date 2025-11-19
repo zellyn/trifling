@@ -102,7 +102,13 @@ class CodeSnippet {
         this.setupOutput();
 
         // Event listeners
-        this.runBtn.addEventListener('click', () => this.run());
+        this.runBtn.addEventListener('click', () => {
+            if (this.isRunning) {
+                this.stop();
+            } else {
+                this.run();
+            }
+        });
         this.copyBtn.addEventListener('click', () => this.copyCode());
         this.makeTrifleBtn.addEventListener('click', () => this.makeTrifle());
 
@@ -187,7 +193,7 @@ class CodeSnippet {
         activeSnippet = this;
         this.isRunning = true;
         this.runBtn.textContent = '⏹ Stop';
-        this.runBtn.disabled = true;
+        this.runBtn.disabled = false;  // Keep enabled so user can stop
 
         // Clear output
         this.terminal.clear();
@@ -229,6 +235,24 @@ class CodeSnippet {
         });
     }
 
+    stop() {
+        if (!this.isRunning) return;
+
+        // Cancel any pending input
+        this.terminal.cancelInput();
+
+        // Tell worker to stop
+        if (sharedWorker) {
+            sharedWorker.postMessage({ type: 'stop' });
+        }
+
+        // Reset state
+        this.isRunning = false;
+        this.runBtn.textContent = '▶ Run';
+        this.runBtn.disabled = false;
+        activeSnippet = null;
+    }
+
     handleWorkerMessage(type, data) {
         switch (type) {
             case 'stdout':
@@ -238,12 +262,7 @@ class CodeSnippet {
                 this.terminal.write(data.text, 'error');
                 break;
             case 'input-request':
-                this.terminal.requestInput(data.prompt, (value) => {
-                    sharedWorker.postMessage({
-                        type: 'input-response',
-                        value,
-                    });
-                });
+                this.handleInputRequest(data.prompt);
                 break;
             case 'canvas-clear':
                 if (this.canvas) {
@@ -323,6 +342,19 @@ class CodeSnippet {
         }
     }
 
+    async handleInputRequest(prompt) {
+        const value = await this.terminal.requestInput(prompt);
+        // value will be null if input was cancelled (user clicked Stop)
+
+        // Send response back to worker (if it still exists)
+        if (sharedWorker) {
+            sharedWorker.postMessage({
+                type: 'input-response',
+                value  // null signals cancellation, raises KeyboardInterrupt in Python
+            });
+        }
+    }
+
     handleCanvasDraw(data) {
         const { operation, args } = data;
         const ctx = this.canvasCtx;
@@ -389,6 +421,11 @@ class CodeSnippet {
     async makeTrifle() {
         const code = this.editor.getValue();
 
+        // Generate a default name based on the page title and snippet position
+        const pageTitle = document.querySelector('h1')?.textContent || 'Example';
+        const snippetIndex = this.snippetId + 1;
+        const defaultName = `${pageTitle} Example ${snippetIndex}`;
+
         // Show modal to get name and description
         const modal = document.createElement('div');
         modal.className = 'modal';
@@ -398,7 +435,7 @@ class CodeSnippet {
                 <form id="createTrifleForm">
                     <div class="form-group">
                         <label for="trifleName">Name:</label>
-                        <input type="text" id="trifleName" required autofocus>
+                        <input type="text" id="trifleName" required autofocus value="${defaultName}">
                     </div>
                     <div class="form-group">
                         <label for="trifleDesc">Description (optional):</label>
@@ -418,7 +455,7 @@ class CodeSnippet {
         const cancelBtn = modal.querySelector('#cancelBtn');
         const nameInput = modal.querySelector('#trifleName');
 
-        nameInput.focus();
+        nameInput.select();  // Select the text so user can type to replace
 
         // Escape to cancel
         const escHandler = (e) => {
@@ -445,25 +482,30 @@ class CodeSnippet {
             const name = nameInput.value.trim();
             const description = modal.querySelector('#trifleDesc').value.trim();
 
-            // Create trifle in IndexedDB
-            const db = new TrifleDB();
             try {
-                const trifleId = await db.createTrifle(name, description);
+                // Get current user
+                const currentUser = await TrifleDB.getCurrentUser();
+                if (!currentUser) {
+                    showError('No user found. Please refresh the page.');
+                    return;
+                }
 
-                // Add the code as main.py
-                const file = {
-                    name: 'main.py',
-                    content: code,
-                };
+                // Create trifle in IndexedDB
+                const newTrifle = await TrifleDB.createTrifle(currentUser.id, name, description);
 
-                const fileHash = await db.addFile(file.content);
-                await db.updateTrifleFile(trifleId, file.name, fileHash, new Date().toISOString());
+                // Store the code content and get hash
+                const hash = await TrifleDB.storeContent(code, 'file');
+
+                // Get trifle data and add the file
+                const trifleInfo = await TrifleDB.getTrifleData(newTrifle.id);
+                trifleInfo.files = [{ path: 'main.py', hash: hash }];
+                await TrifleDB.updateTrifle(newTrifle.id, trifleInfo);
 
                 showInfo(`Trifle "${name}" created!`);
                 cleanup();
 
                 // Redirect to editor
-                window.location.href = `/editor.html?id=${trifleId}`;
+                window.location.href = `/editor.html?id=${newTrifle.id}`;
             } catch (error) {
                 showError('Failed to create trifle: ' + error.message);
                 console.error(error);

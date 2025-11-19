@@ -180,13 +180,14 @@
 
 .doc-article {
     line-height: 1.7;
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .doc-article h1 {
     font-size: 2.25rem;
     margin-bottom: 0.5rem;
-    color: #2c3e50;
-    border-bottom: 2px solid #e1e4e8;
+    color: rgba(255, 255, 255, 0.98);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 0.5rem;
 }
 
@@ -194,19 +195,19 @@
     font-size: 1.75rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: rgba(255, 255, 255, 0.98);
 }
 
 .doc-article h3 {
     font-size: 1.375rem;
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
-    color: #2c3e50;
+    color: rgba(255, 255, 255, 0.98);
 }
 
 .doc-article p {
     margin-bottom: 1rem;
-    color: #24292e;
+    color: rgba(255, 255, 255, 0.90);
 }
 
 .doc-article ul, .doc-article ol {
@@ -219,12 +220,13 @@
 }
 
 .doc-article code {
-    background: #f6f8fa;
+    background: rgba(0, 0, 0, 0.15);
     padding: 0.2em 0.4em;
     border-radius: 3px;
     font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
     font-size: 0.9em;
-    color: #e83e8c;
+    color: #ff9ecd;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .doc-article pre code {
@@ -360,6 +362,35 @@
     min-height: 60px;
     max-height: 300px;
     overflow-y: auto;
+}
+
+.snippet-terminal .terminal-input-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.snippet-terminal .terminal-prompt {
+    color: #d4d4d4;
+    white-space: pre;
+}
+
+.snippet-terminal .terminal-input {
+    background: transparent;
+    border: none;
+    color: #4ec9b0;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 13px;
+    outline: none;
+    flex: 1;
+}
+
+.snippet-terminal .terminal-input:focus {
+    outline: none;
+}
+
+.snippet-terminal .terminal-input::placeholder {
+    color: #666;
 }
 
 .snippet-canvas-pane {

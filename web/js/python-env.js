@@ -223,6 +223,138 @@ class Canvas:
 import sys
 import types
 
+# Canvas context that mimics HTML5 Canvas 2D API
+class CanvasContext:
+    def __init__(self):
+        self._send = workerSend
+        self._fillStyle = 'black'
+        self._strokeStyle = 'black'
+        self._lineWidth = 1
+
+    @property
+    def fillStyle(self):
+        return self._fillStyle
+
+    @fillStyle.setter
+    def fillStyle(self, value):
+        self._fillStyle = value
+
+    @property
+    def strokeStyle(self):
+        return self._strokeStyle
+
+    @strokeStyle.setter
+    def strokeStyle(self, value):
+        self._strokeStyle = value
+
+    @property
+    def lineWidth(self):
+        return self._lineWidth
+
+    @lineWidth.setter
+    def lineWidth(self, value):
+        self._lineWidth = value
+
+    def fillRect(self, x, y, width, height):
+        """Draw a filled rectangle."""
+        self._send('canvas-draw', {
+            'operation': 'fillStyle',
+            'args': [self._fillStyle]
+        })
+        self._send('canvas-draw', {
+            'operation': 'fillRect',
+            'args': [x, y, width, height]
+        })
+
+    def strokeRect(self, x, y, width, height):
+        """Draw a rectangle outline."""
+        self._send('canvas-draw', {
+            'operation': 'strokeStyle',
+            'args': [self._strokeStyle]
+        })
+        self._send('canvas-draw', {
+            'operation': 'lineWidth',
+            'args': [self._lineWidth]
+        })
+        self._send('canvas-draw', {
+            'operation': 'strokeRect',
+            'args': [x, y, width, height]
+        })
+
+    def clearRect(self, x, y, width, height):
+        """Clear a rectangle area."""
+        self._send('canvas-draw', {
+            'operation': 'clearRect',
+            'args': [x, y, width, height]
+        })
+
+    def beginPath(self):
+        """Begin a new path."""
+        self._send('canvas-draw', {
+            'operation': 'beginPath',
+            'args': []
+        })
+
+    def closePath(self):
+        """Close the current path."""
+        self._send('canvas-draw', {
+            'operation': 'closePath',
+            'args': []
+        })
+
+    def moveTo(self, x, y):
+        """Move to a point without drawing."""
+        self._send('canvas-draw', {
+            'operation': 'moveTo',
+            'args': [x, y]
+        })
+
+    def lineTo(self, x, y):
+        """Draw a line to a point."""
+        self._send('canvas-draw', {
+            'operation': 'lineTo',
+            'args': [x, y]
+        })
+
+    def arc(self, x, y, radius, startAngle, endAngle):
+        """Draw an arc/circle."""
+        self._send('canvas-draw', {
+            'operation': 'arc',
+            'args': [x, y, radius, startAngle, endAngle]
+        })
+
+    def fill(self):
+        """Fill the current path."""
+        self._send('canvas-draw', {
+            'operation': 'fillStyle',
+            'args': [self._fillStyle]
+        })
+        self._send('canvas-draw', {
+            'operation': 'fill',
+            'args': []
+        })
+
+    def stroke(self):
+        """Stroke the current path."""
+        self._send('canvas-draw', {
+            'operation': 'strokeStyle',
+            'args': [self._strokeStyle]
+        })
+        self._send('canvas-draw', {
+            'operation': 'lineWidth',
+            'args': [self._lineWidth]
+        })
+        self._send('canvas-draw', {
+            'operation': 'stroke',
+            'args': []
+        })
+
+# Create canvas submodule with ctx
+canvas_module = types.ModuleType('trifling.canvas')
+canvas_module.__doc__ = "HTML5-like Canvas 2D API"
+canvas_module.__package__ = 'trifling'
+canvas_module.ctx = CanvasContext()
+
 # Create mine as a proper module that can have submodules
 mine_module = types.ModuleType('trifling.mine')
 mine_module.__doc__ = "Submodule for importing user's own trifles"
@@ -231,11 +363,12 @@ mine_module.__path__ = []  # This makes it a package
 
 class TriflingModule:
     def __init__(self):
-        self.canvas = Canvas()
+        self.canvas = canvas_module  # Use the canvas module instead of Canvas instance
         self.mine = mine_module
 
 trifling = TriflingModule()
 sys.modules['trifling'] = trifling
+sys.modules['trifling.canvas'] = canvas_module
 sys.modules['trifling.mine'] = mine_module
 
 # Custom import hook for trifling.mine.* imports

@@ -361,9 +361,10 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
 
             // Queue frame for fill buffer (doesn't count)
             if (this._filling) {
+                const fillPath = this._fillPath;  // Capture reference at queue time
                 frameManager.addFrame(() => {
-                    if (this._fillPath) {
-                        this._fillPath.lineTo(this._x, this._y);
+                    if (fillPath) {
+                        fillPath.lineTo(this._x, this._y);
                     }
                 }, false);
             }
@@ -466,9 +467,10 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
 
             // Queue frame for fill buffer (doesn't count)
             if (this._filling) {
+                const fillPath = this._fillPath;  // Capture reference at queue time
                 frameManager.addFrame(() => {
-                    if (this._fillPath) {
-                        this._fillPath.lineTo(this._x, this._y);
+                    if (fillPath) {
+                        fillPath.lineTo(this._x, this._y);
                     }
                 }, false);
             }
@@ -590,9 +592,10 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
 
                 // Queue movement frame with fill support
                 if (this._filling) {
+                    const fillPath = this._fillPath;  // Capture reference at queue time
                     frameManager.addFrame(() => {
-                        if (this._fillPath) {
-                            this._fillPath.lineTo(toX, toY);
+                        if (fillPath) {
+                            fillPath.lineTo(toX, toY);
                         }
                     }, false);
                 }
@@ -750,7 +753,7 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
                     const paper = this.getPaper();
                     paper.fillStyle = fillColor;
                     paper.fill(fillPath);
-                }, false); // Don't count as animation frame
+                }, true); // Count as animation frame so it gets processed
 
                 // Now we can null the path for next begin_fill()
                 this._fillPath = null;
@@ -846,7 +849,7 @@ export function setupTurtleGraphics(targetElementId = 'canvasPane', options = {}
             context.beginPath();
             context.lineWidth = 1;
             context.strokeStyle = this._color;
-            context.fillStyle = this._fill;
+            context.fillStyle = this._color;  // Turtle filled with its pen color, not user's fill color
             context.moveTo(shape[0][0], shape[0][1]);
 
             for (let i = 1; i < shape.length; i++) {

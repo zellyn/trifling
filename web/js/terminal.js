@@ -20,7 +20,7 @@ class Terminal {
             <div class="terminal-output" id="terminalLines"></div>
             <div class="terminal-input-line" id="terminalInputLine" style="display: none;">
                 <span class="terminal-prompt" id="terminalPrompt"></span>
-                <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false">
+                <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" data-1p-ignore data-bwignore data-lpignore="true" data-form-type="other">
             </div>
         `;
 
